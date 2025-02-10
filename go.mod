@@ -1,14 +1,18 @@
 module GooMap-review-snatcher
 
-go 1.22.7
+go 1.23
+
+toolchain go1.23.6
 
 require (
 	github.com/HazelnutParadise/go-chunkpipe v0.0.4
+	github.com/HazelnutParadise/insyra v0.1.1
 	github.com/HazelnutParadise/sveltigo v0.0.3
 	github.com/gin-gonic/gin v1.10.0
 )
 
 require (
+	github.com/HazelnutParadise/Go-Utils v0.7.10 // indirect
 	github.com/bytedance/sonic v1.12.8 // indirect
 	github.com/bytedance/sonic/loader v0.2.3 // indirect
 	github.com/cloudwego/base64x v0.1.5 // indirect
@@ -34,6 +38,7 @@ require (
 	github.com/ugorji/go/codec v1.2.12 // indirect
 	golang.org/x/arch v0.14.0 // indirect
 	golang.org/x/crypto v0.33.0 // indirect
+	golang.org/x/exp v0.0.0-20241217172543-b2144cdd0a67 // indirect
 	golang.org/x/net v0.34.0 // indirect
 	golang.org/x/sys v0.30.0 // indirect
 	golang.org/x/text v0.22.0 // indirect
