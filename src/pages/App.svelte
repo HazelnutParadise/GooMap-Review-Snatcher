@@ -2,6 +2,32 @@
     import InputCard from '../components/InputCard.svelte'
     export let title: string
     export let subtitle: string
+    const searchStoreUrl = "https://api.jsonbin.io/b/60f1f1b4f7b5c734b689f3b4";
+    let inputStr = '';
+    let storeData = {};
+
+    let isLoading = false;
+    const handleSearch = async() => {
+        isLoading = true;
+        console.log(inputStr);
+        try{
+            const res = await fetch(searchStoreUrl)
+            if (!res.ok) {
+                console.error('Error:', res.statusText);
+                alert('無法取得搜尋結果');
+                return;
+            }
+            storeData = await res.json();
+        }catch(e){
+            console.error(e);
+            alert('無法取得搜尋結果');
+        }finally {
+            isLoading = false;
+        }
+    }
+    const handleGetReview = async() => {
+        // todo
+    }
 </script>
 
 <svelte:head>
@@ -13,7 +39,7 @@
         <h1 class="title">{title}</h1>
         <h2 class="subtitle">{subtitle}</h2>
     </div>
-    <InputCard />
+    <InputCard {isLoading}{inputStr}{handleSearch}{handleGetReview}{storeData}/>
 </div>
 
 <style>

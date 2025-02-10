@@ -1,23 +1,10 @@
 <script>
-    let inputStr = '';
-    let storeData = {};
-    let isLoading = false;
+    export let isLoading;
+    export let inputStr;
+    export let handleSearch;
+    export let handleGetReview;
+    export let storeData = {};
     let form = null;
-    const searchStoreUrl = ""
-
-    const handleSearch = async() => {
-        console.log(inputStr);
-        const res = await fetch(searchStoreUrl)
-        if (!res.ok) {
-            console.error('Error:', res.statusText);
-            alert('無法取得搜尋結果');
-            return;
-        }
-        storeData = await res.json();
-    }
-    const handleGetReview = async() => {
-        // todo
-    }
 </script>
 
 
