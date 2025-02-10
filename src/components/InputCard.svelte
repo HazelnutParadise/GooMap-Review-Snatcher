@@ -19,7 +19,7 @@
 
 {#if isLoading}
     <p>Loading...</p>
-{:else if storeData !== {}}
+{:else if Object.keys(storeData).length > 0}
     <form on:submit|preventDefault={handleSearch} class="input-form" bind:this={form}>
         <input type="text" placeholder="輸入關鍵字" bind:value={inputStr} />
         <button type="submit">搜尋</button>
