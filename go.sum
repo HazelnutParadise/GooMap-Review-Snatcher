@@ -1,3 +1,5 @@
+github.com/HazelnutParadise/go-chunkpipe v0.0.4 h1:Nh61LPmpP4uUNfkOaOFPDB/hzXGl4zt6Rj1V3+PRo0s=
+github.com/HazelnutParadise/go-chunkpipe v0.0.4/go.mod h1:jzs6LO4uQWxi6miZze5oyHNv1h7yw+8tlFzmPcDpU9Y=
 github.com/HazelnutParadise/sveltigo v0.0.3 h1:KDPg32Fun2E97DdiKOfnO/QjDSCu1hJB04aD8b9tDXg=
 github.com/HazelnutParadise/sveltigo v0.0.3/go.mod h1:lAHKLtPjXVD7qk9G1+Q4raC4RDShGmr5DiDSb/7Cqfs=
 github.com/Masterminds/semver/v3 v3.2.1 h1:RN9w6+7QoMeJVGyfmbcgs28Br8cvmnucEXnY0rYXWg0=

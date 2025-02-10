@@ -1,11 +1,15 @@
 package app
 
-import "sync"
+import (
+	"github.com/HazelnutParadise/go-chunkpipe"
+)
 
-var waittingBuf = sync.Map{}
+var waittingBuf = chunkpipe.NewChunkPipe[string]()
+
+var dataBuf = chunkpipe.NewChunkPipe[any]()
 
 func SearchStores() {}
 
-func FetchReviews() {
-	waittingBuf.Store("fetchReviews", true)
+func FetchReviews(storeID string) {
+	waittingBuf.Push([]string{storeID})
 }

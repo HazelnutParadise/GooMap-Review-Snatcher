@@ -3,6 +3,7 @@ module GooMap-review-snatcher
 go 1.22.7
 
 require (
+	github.com/HazelnutParadise/go-chunkpipe v0.0.4
 	github.com/HazelnutParadise/sveltigo v0.0.3
 	github.com/gin-gonic/gin v1.10.0
 )
