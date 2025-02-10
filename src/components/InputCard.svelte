@@ -4,6 +4,7 @@
     let isLoading = false;
     let form = null;
     const searchStoreUrl = ""
+
     const handleSearch = async() => {
         console.log(inputStr);
         const res = await fetch(searchStoreUrl)
@@ -14,30 +15,34 @@
         }
         storeData = await res.json();
     }
+    const handleGetReview = async() => {
+        // todo
+    }
 </script>
 
 
 {#if isLoading}
     <p>Loading...</p>
-{:else if storeData !== {}}
+{:else if  Object.keys(storeData).length !== 0}
+    <form on:submit|preventDefault={handleGetReview} class="input-form" bind:this={form}>
+        <select bind:value={inputStr} class="store-select">
+            {#each Object.keys(storeData) as store}
+                <option value={store}>{store}</option>
+            {/each}
+        </select>
+        <button type="submit">確定</button>
+    </form>
+{:else}
     <form on:submit|preventDefault={handleSearch} class="input-form" bind:this={form}>
         <input type="text" placeholder="輸入關鍵字" bind:value={inputStr} />
         <button type="submit">搜尋</button>
     </form>
-{:else}
-    <p>搜尋結果</p>
-    <ul>
-        <!-- todo -->
-        {#each Object.keys(storeData) as key}
-            <li>{key}: {storeData[key]}</li>
-        {/each}
-    </ul>
 {/if}
 
 
 <style>
     .input-form {
-        height: 100px;
+        min-height: 100px;
         width: 500px;
         max-width: 90vw;
         padding: 20px;
@@ -70,5 +75,14 @@
         color: white;
         font-size: 1rem;
         cursor: pointer;
+    }
+
+    .store-select {
+        height: 40px;
+        width: 80%;
+        border-radius: 15px;
+        border: none;
+        padding: 5px;
+        margin-right: 10px;
     }
 </style>
