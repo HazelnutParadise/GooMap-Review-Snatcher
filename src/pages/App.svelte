@@ -1,6 +1,7 @@
 <script lang="ts">
+    import InputCard from '../components/InputCard.svelte'
     export let title: string
-    
+    export let subtitle: string
 </script>
 
 <svelte:head>
@@ -8,7 +9,11 @@
 </svelte:head>
 
 <div class="container">
-    <h1 class="title">{title}</h1>
+    <div class="title-box">
+        <h1 class="title">{title}</h1>
+        <h2 class="subtitle">{subtitle}</h2>
+    </div>
+    <InputCard />
 </div>
 
 <style>
@@ -21,16 +26,30 @@
         background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
     }
 
-    .title {
-        font-size: 2.5rem;
-        color: #2c3e50;
+    .title-box {
+        display: flex;
+        flex-direction: column;
+        align-items: start;
+        justify-content: center;
         margin-bottom: 2rem;
-        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
         transition: transform 0.3s ease;
     }
 
-    .title:hover {
+    .title {
+        font-size: 2.5rem;
+        color: #2c3e50;
+        margin: 0;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .title-box:hover {
         transform: scale(1.05);
+    }
+
+    .subtitle {
+        font-size: 1.5rem;
+        color: #0A0903;
+        margin: 0;
     }
 
     @keyframes pop {

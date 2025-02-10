@@ -1,10 +1,10 @@
-:root {
-    --bg-1: #c2cce4;
-    --bg-2: #8ab0ba;
+* {
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 body {
     margin: 0;
 
-    background: var(--bg-1);
+    background: #D6E3F8;
 }
