@@ -1,9 +1,9 @@
 package main
 
 import (
+	"GooMap-review-snatcher/router"
 	"fmt"
 	"net/http"
-	"GooMap-review-snatcher/router"
 )
 
 func main() {
