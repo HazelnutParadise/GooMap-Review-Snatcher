@@ -1,30 +1,37 @@
 <script>
     let inputStr = '';
-    let fetchPromise;
-    function handleSearch() {
+    let storeData = {};
+    let isLoading = false;
+    let form = null;
+    const searchStoreUrl = ""
+    const handleSearch = async() => {
         console.log(inputStr);
-        fetchPromise= fetch(`https://api.github.com/users/${inputStr}`);
+        const res = await fetch(searchStoreUrl)
+        if (!res.ok) {
+            console.error('Error:', res.statusText);
+            alert('無法取得搜尋結果');
+            return;
+        }
+        storeData = await res.json();
     }
 </script>
 
 
-<form on:submit|preventDefault={handleSearch} class="input-form">
-    <input type="text" placeholder="輸入關鍵字" bind:value={inputStr} />
-    <button type="submit">搜尋</button>
-</form>
-
-{#if fetchPromise}
-    {#await fetchPromise}
-    <p>載入中</p>
-    {:then res}
-        {#if res.ok}
-            <p>成功</p>
-        {:else}
-        <p>失敗</p>
-        {/if}
-    {:catch err}
-        <p>失敗</p>
-    {/await}
+{#if isLoading}
+    <p>Loading...</p>
+{:else if storeData !== {}}
+    <form on:submit|preventDefault={handleSearch} class="input-form" bind:this={form}>
+        <input type="text" placeholder="輸入關鍵字" bind:value={inputStr} />
+        <button type="submit">搜尋</button>
+    </form>
+{:else}
+    <p>搜尋結果</p>
+    <ul>
+        <!-- todo -->
+        {#each Object.keys(storeData) as key}
+            <li>{key}: {storeData[key]}</li>
+        {/each}
+    </ul>
 {/if}
 
 
