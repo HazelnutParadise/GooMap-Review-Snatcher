@@ -1,5 +1,5 @@
 # 使用 Alpine 為基底
-FROM golang:1.23-alpine AS builder
+FROM golang:1.22-alpine AS builder
 
 # 設定工作目錄
 WORKDIR /app
