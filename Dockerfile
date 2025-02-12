@@ -6,7 +6,7 @@ COPY . .
 
 RUN go mod tidy
 
-RUN go build -o main .
+RUN go build -o main
 
 FROM scratch
 
