@@ -139,12 +139,63 @@
 
     .review-table {
         border-collapse: collapse;
+        width: 100%;
+        background-color: white;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    .review-table th {
+        background-color: #2c3e50;
+        color: white;
+        padding: 12px 15px;
+        text-align: left;
+        font-weight: 600;
+    }
+
+    .review-table td {
+        padding: 12px 15px;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .review-table tbody tr:hover {
+        background-color: #f5f5f5;
+        transition: background-color 0.2s ease;
+    }
+
+    .review-table tbody tr:last-child td {
+        border-bottom: none;
     }
 
     .review-table-box {
         width: 80%;
         height: 500px;
         overflow: auto;
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        padding: 1rem;
+    }
+
+    /* 美化捲軸 */
+    .review-table-box::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+
+    .review-table-box::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 4px;
+    }
+
+    .review-table-box::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 4px;
+    }
+
+    .review-table-box::-webkit-scrollbar-thumb:hover {
+        background: #555;
     }
 
     .reset-button {
