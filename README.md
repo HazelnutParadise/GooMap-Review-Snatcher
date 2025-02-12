@@ -1,4 +1,4 @@
-# GooMap-review-snatcher
+# GooMap-Review-Snatcher
 
 To install dependencies:
 

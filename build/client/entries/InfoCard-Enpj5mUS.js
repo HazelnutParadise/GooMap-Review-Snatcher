@@ -1,1 +1,0 @@
-import{t as r,d as t}from"../chunks/template-Ck2fRipi.js";var e=r('<div class="info-card svelte-1ekwafl"><strong>估咩評論小扒手</strong> 幫你輕鬆爬取 Google Maps 商家評論，<br> 輸入店名立即開始吧！</div>');function d(a){var o=e();t(a,o)}export{d as default};
