@@ -20,4 +20,4 @@ RUN go install github.com/TimLai666/golte-cli@latest
 RUN golte-cli build --sveltego
 
 # 執行應用程式
-CMD ["golte-cli", "run", "--sveltego"]
+CMD ["./dist/GooMap-Review-Snatcher"]
