@@ -3,7 +3,7 @@ package router
 import (
 	"net/http"
 
-	"GooMap-review-snatcher/build"
+	"goomap-review-snatcher/build"
 
 	"github.com/HazelnutParadise/sveltigo"
 	"github.com/gin-gonic/gin"

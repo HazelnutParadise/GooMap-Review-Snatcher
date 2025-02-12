@@ -1,9 +1,9 @@
 package main
 
 import (
-	"GooMap-review-snatcher/app"
-	"GooMap-review-snatcher/router"
 	"fmt"
+	"goomap-review-snatcher/app"
+	"goomap-review-snatcher/router"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
