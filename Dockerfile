@@ -6,10 +6,9 @@ COPY . .
 
 RUN go mod tidy
 
-RUN go build -o main
+RUN go build -o main .
 
-FROM scratch
-
+FROM alpine:latest
 COPY --from=builder /app/main .
 
 CMD ["./main"]
