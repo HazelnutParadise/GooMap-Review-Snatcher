@@ -36,7 +36,7 @@ func GetReviews(uuid, storeID string, pages int) datafetch.GoogleMapsStoreReview
 	var reviews datafetch.GoogleMapsStoreReviews
 	for {
 		time.Sleep(time.Millisecond * 1000)
-		gotReviewsBuf.Range(func(key, value interface{}) bool {
+		gotReviewsBuf.Range(func(key, value any) bool {
 			if key.(string) == uuid {
 				reviews = value.(datafetch.GoogleMapsStoreReviews)
 				return false
@@ -63,7 +63,7 @@ func fetchStores() {
 	var storeName string
 	var found bool
 
-	searchingBuf.Range(func(key, value interface{}) bool {
+	searchingBuf.Range(func(key, value any) bool {
 		uuid = key.(string)
 		storeName = value.(string)
 		found = true
@@ -85,10 +85,10 @@ func fetchReviews() {
 	var pages int
 	var found bool
 
-	gettingReviewsBuf.Range(func(key, value interface{}) bool {
+	gettingReviewsBuf.Range(func(key, value any) bool {
 		uuid = key.(string)
-		storeID = value.([2]interface{})[0].(string)
-		pages = value.([2]interface{})[1].(int)
+		storeID = value.([2]any)[0].(string)
+		pages = value.([2]any)[1].(int)
 		found = true
 		return false // 停止迭代，只取第一個項目
 	})
