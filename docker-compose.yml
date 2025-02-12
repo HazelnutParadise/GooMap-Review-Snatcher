@@ -1,6 +1,6 @@
 services:
   web:
-    image: GooMap-Review-Snatcher
+    image: GMRS
     ports:
       - "5432:8000"
     restart: unless-stopped
