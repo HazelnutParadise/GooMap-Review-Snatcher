@@ -118,8 +118,8 @@
     <title>{title} - 榛果繽紛樂</title>
 </svelte:head>
 
-<div id="Pistachio-Announcement"></div>
 <div id="navbar-placeholder"></div>
+<div id="Pistachio-Announcement"></div>
 <div class="container">
     <img src="https://src.hazelnut-paradise.com/GooMapReviewSnatcher.png" alt="GooMapReviewSnatcher" style="width: 100%; max-width: 150px;"/>
     <div class="title-box">
