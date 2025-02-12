@@ -12,11 +12,11 @@ RUN apk add --no-cache \
     # nodejs \
     # npm
 
-    WORKDIR /GooMap-Review-Snatcher
+WORKDIR /GooMap-Review-Snatcher
 COPY . .
 
-# 安裝相關依賴
-# RUN npm install svelte @sveltejs/vite-plugin-svelte
+RUN bun cache clean
+
 RUN go install github.com/TimLai666/golte-cli@latest
 # RUN golte-cli build --sveltego
 
