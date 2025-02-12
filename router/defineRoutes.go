@@ -1,8 +1,8 @@
 package router
 
 import (
+	"GooMap-Review-Snatcher/app"
 	"fmt"
-	"goomap-review-snatcher/app"
 
 	"github.com/HazelnutParadise/Go-Utils/conv"
 	"github.com/HazelnutParadise/sveltigo"

@@ -2,7 +2,7 @@
   "lockfileVersion": 1,
   "workspaces": {
     "": {
-      "name": "GooMap-review-snatcher",
+      "name": "goomap-review-snatcher",
       "dependencies": {
         "golte": "^0.1.2",
       },

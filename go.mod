@@ -1,4 +1,4 @@
-module goomap-review-snatcher
+module GooMap-Review-Snatcher
 
 go 1.23
 

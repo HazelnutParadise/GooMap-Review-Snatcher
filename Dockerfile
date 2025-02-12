@@ -9,6 +9,6 @@ RUN golte-cli build --sveltigo
 
 
 FROM golang:1.23-alpine
-COPY --from=builder /app/dist/goomap-review-snatcher /goomap-review-snatcher
+COPY --from=builder /app/dist/GooMap-Review-Snatcher /GooMap-Review-Snatcher
 
-CMD ["./goomap-review-snatcher"]
+CMD ["./GooMap-Review-Snatcher"]
