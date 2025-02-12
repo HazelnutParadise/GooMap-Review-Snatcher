@@ -18,10 +18,12 @@ RUN go install github.com/TimLai666/golte-cli@latest
 RUN golte-cli build --sveltigo
 
 # 使用多階段建構來減少最終映像大小
-FROM scratch
+FROM alpine:latest
 
-# 複製編譯好的檔案
-COPY --from=builder /GooMap-Review-Snatcher/dist /dist
+# 複製必要的函式庫
+COPY --from=builder /usr/lib/libstdc++.so.6 /usr/lib/
+COPY --from=builder /usr/lib/libgcc_s.so.1 /usr/lib/
+COPY --from=builder /dist/GooMap-Review-Snatcher /dist/
 
 # 設定工作目錄
 WORKDIR /dist
