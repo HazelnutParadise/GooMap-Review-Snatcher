@@ -119,7 +119,6 @@
 </svelte:head>
 
 <div id="navbar-placeholder" style="height: 50px;"></div>
-<div id="Pistachio-Announcement" style="height: 50px; z-index: 100;"></div>
 <div class="container">
     <img src="https://src.hazelnut-paradise.com/GooMapReviewSnatcher.png" alt="GooMapReviewSnatcher" style="width: 100%; max-width: 150px;"/>
     <div class="title-box">
