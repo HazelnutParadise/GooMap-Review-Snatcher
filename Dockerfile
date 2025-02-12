@@ -1,9 +1,13 @@
-FROM alpine:latest
+FROM golang-alpine:1.23 AS builder
 
 WORKDIR /app
-ADD GooMap-Review-Snatcher .
 
-# 添加執行權限
-RUN chmod +x GooMap-Review-Snatcher
+COPY . .
 
-CMD ["./GooMap-Review-Snatcher"]
+RUN go build -o main .
+
+FROM scratch
+
+COPY --from=builder /app/main .
+
+CMD ["./main"]
