@@ -15,7 +15,7 @@ RUN apk add --no-cache \
 WORKDIR /GooMap-Review-Snatcher
 COPY . .
 
-RUN bun cache clean
+RUN bun install
 
 RUN go install github.com/TimLai666/golte-cli@latest
 # RUN golte-cli build --sveltego
