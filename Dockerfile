@@ -1,13 +1,10 @@
-FROM golang:1.23-alpine AS builder
+FROM golang:1.23-alpine
 
 RUN apk add --no-cache bash curl
 
 WORKDIR /app
 COPY . .
 RUN go install github.com/TimLai666/golte-cli@latest
-ENV CGO_ENABLED=0
 RUN golte-cli build --sveltigo
 
-FROM scratch
-COPY --from=builder /app/dist/GooMap-Review-Snatcher /GooMap-Review-Snatcher
 CMD ["./GooMap-Review-Snatcher"]
