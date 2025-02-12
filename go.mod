@@ -6,7 +6,7 @@ toolchain go1.23.6
 
 require (
 	github.com/HazelnutParadise/go-chunkpipe v0.0.4
-	github.com/HazelnutParadise/insyra v0.1.1
+	github.com/HazelnutParadise/insyra v0.1.3
 	github.com/HazelnutParadise/sveltigo v0.0.3
 	github.com/gin-gonic/gin v1.10.0
 )
