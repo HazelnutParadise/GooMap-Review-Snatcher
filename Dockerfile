@@ -11,6 +11,6 @@ RUN golte-cli build --sveltigo
 
 FROM alpine:lastest
 
-COPY --from=builder /app/dist/app /app/bin/main
+COPY --from=builder /app/dist/GooMap-Review-Snatcher /app/bin/main
 
 CMD ["/app/bin/main"]
