@@ -5,6 +5,7 @@ RUN apk add --no-cache bash curl
 WORKDIR /app
 COPY . .
 RUN go install github.com/TimLai666/golte-cli@latest
+ENV CGO_ENABLED=0
 RUN golte-cli build --sveltigo
 
 FROM scratch
