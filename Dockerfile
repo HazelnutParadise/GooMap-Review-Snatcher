@@ -4,9 +4,8 @@ WORKDIR /app
 
 COPY . .
 
-RUN go mod tidy
+RUN CGO_ENABLED=0 go build -o /app/bin/main
 
-RUN go build -o main .
 
 FROM alpine:latest
 COPY --from=builder /app/main .
