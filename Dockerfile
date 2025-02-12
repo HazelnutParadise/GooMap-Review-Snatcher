@@ -22,4 +22,4 @@ RUN go install github.com/TimLai666/golte-cli@latest
 
 
 # 執行應用程式
-CMD ["golte-cli", "run", "--sveltego"]
+CMD ["golte-cli", "run", "--sveltigo"]
