@@ -25,7 +25,8 @@ func SearchStores(uuid, storeName string) []datafetch.GoogleMapsStoreData {
 			}
 			return true
 		})
-		if stores != nil {
+		if stores != nil && len(stores) > 0 {
+			searchedBuf.Delete(uuid)
 			return stores
 		}
 	}
@@ -43,7 +44,8 @@ func GetReviews(uuid, storeID string, pages int) datafetch.GoogleMapsStoreReview
 			}
 			return true
 		})
-		if reviews != nil {
+		if reviews != nil && len(reviews) > 0 {
+			gotReviewsBuf.Delete(uuid)
 			return reviews
 		}
 	}

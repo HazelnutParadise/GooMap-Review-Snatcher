@@ -2,6 +2,7 @@ package router
 
 import (
 	"GooMap-review-snatcher/app"
+	"fmt"
 
 	"github.com/HazelnutParadise/Go-Utils/conv"
 	"github.com/HazelnutParadise/sveltigo"
@@ -20,14 +21,24 @@ func defineRoutes(r *gin.Engine) {
 	api := r.Group("/api")
 	api.GET("/search", func(ctx *gin.Context) {
 		storeName := ctx.Query("storeName")
+		if storeName == "" {
+			ctx.JSON(400, gin.H{"error": "storeName is required"})
+			return
+		}
 		// 產生一個 UUID
 		searchUUID := uuid.New().String()
+		fmt.Println("searchUUID", searchUUID)
+		fmt.Println("storeName", storeName)
 		stores := app.SearchStores(searchUUID, storeName)
 		ctx.JSON(200, stores)
 	})
 	api.GET("/reviews", func(ctx *gin.Context) {
 		storeID := ctx.Query("storeID")
 		pages := ctx.Query("pages")
+		if storeID == "" || pages == "" {
+			ctx.JSON(400, gin.H{"error": "storeID and pages are required"})
+			return
+		}
 		// 產生一個 UUID
 		reviewUUID := uuid.New().String()
 		reviews := app.GetReviews(reviewUUID, storeID, conv.ParseInt(pages))

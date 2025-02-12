@@ -5,14 +5,13 @@ go 1.23
 toolchain go1.23.6
 
 require (
-	github.com/HazelnutParadise/go-chunkpipe v0.0.4
 	github.com/HazelnutParadise/insyra v0.1.3
 	github.com/HazelnutParadise/sveltigo v0.0.3
 	github.com/gin-gonic/gin v1.10.0
 )
 
 require (
-	github.com/HazelnutParadise/Go-Utils v0.7.10 // indirect
+	github.com/HazelnutParadise/Go-Utils v0.7.10
 	github.com/bytedance/sonic v1.12.8 // indirect
 	github.com/bytedance/sonic/loader v0.2.3 // indirect
 	github.com/cloudwego/base64x v0.1.5 // indirect
