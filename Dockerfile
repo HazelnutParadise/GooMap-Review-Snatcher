@@ -8,16 +8,16 @@ RUN apk add --no-cache \
     gcc \
     musl-dev \
     libstdc++ \
-    libgcc \
-    nodejs \
-    npm
+    libgcc 
+    # nodejs \
+    # npm
 
-WORKDIR /GooMap-Review-Snatcher
 COPY . .
 
 # 安裝相關依賴
-RUN npm install svelte @sveltejs/vite-plugin-svelte
+# RUN npm install svelte @sveltejs/vite-plugin-svelte
 RUN go install github.com/TimLai666/golte-cli@latest
+RUN golte-cli build --sveltego
 
 # 執行應用程式
-CMD ["golte-cli", "run", "--sveltigo"]
+CMD ["golte-cli", "run", "--sveltego"]
