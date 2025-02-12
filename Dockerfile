@@ -1,16 +1,15 @@
-FROM golang:1.23 AS builder
+FROM golang:1.23
 
 WORKDIR /app
 
-RUN go install github.com/TimLai666/golte-cli@latest
+# 先複製 `go.mod` 和 `go.sum`，提高快取效率
+COPY go.mod go.sum ./
+RUN go mod download
 
 # 再複製所有程式碼（包含 `embed` 用的靜態檔案）
 COPY . .
 
-RUN golte-cli build --sveltigo
-
-FROM alpine:lastest
-
-COPY --from=builder /app/dist/GooMap-Review-Snatcher /app/bin/main
+# 明確設定 CGO_ENABLED，避免靜態連結問題
+RUN CGO_ENABLED=0 go build -o /app/bin/main .
 
 CMD ["/app/bin/main"]
