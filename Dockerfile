@@ -8,4 +8,4 @@ RUN go install github.com/TimLai666/golte-cli@latest
 RUN golte-cli build --sveltigo
 
 
-CMD ["/GooMap-Review-Snatcher/dist/GooMap-Review-Snatcher"]
+CMD ["/dist/GooMap-Review-Snatcher"]
