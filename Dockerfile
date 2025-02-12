@@ -9,6 +9,6 @@ RUN golte-cli build --sveltigo
 
 
 FROM scratch
-COPY --from=builder /app/dist/GooMap-Review-Snatcher /GooMap-Review-Snatcher
+COPY --from=builder /app/dist/app /app
 
-CMD ["./GooMap-Review-Snatcher"]
+CMD ["./app"]
