@@ -1,7 +1,7 @@
-FROM scratch
+FROM alpine:latest
 
 WORKDIR /app
-COPY GooMap-Review-Snatcher .
+ADD GooMap-Review-Snatcher .
 
 # 添加執行權限
 RUN chmod +x GooMap-Review-Snatcher
