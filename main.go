@@ -5,9 +5,12 @@ import (
 	"GooMap-review-snatcher/router"
 	"fmt"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
+	gin.SetMode(gin.ReleaseMode)
 	r := router.GinRouter()
 	go app.KeepFetching()
 
