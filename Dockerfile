@@ -8,7 +8,7 @@ RUN go install github.com/TimLai666/golte-cli@latest
 RUN golte-cli build --sveltigo
 
 
-FROM golang:1.23-alpine
+FROM scratch
 COPY --from=builder /app/dist/GooMap-Review-Snatcher /GooMap-Review-Snatcher
 
 CMD ["./GooMap-Review-Snatcher"]
