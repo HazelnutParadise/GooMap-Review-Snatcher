@@ -12,6 +12,7 @@ RUN apk add --no-cache \
     # nodejs \
     # npm
 
+    WORKDIR /GooMap-Review-Snatcher
 COPY . .
 
 # 安裝相關依賴
@@ -19,5 +20,7 @@ COPY . .
 RUN go install github.com/TimLai666/golte-cli@latest
 # RUN golte-cli build --sveltego
 
+RUN golte-cli build --sveltigo
+
 # 執行應用程式
-CMD ["golte-cli", "run", "--sveltigo"]
+CMD ["./GooMap-Review-Snatcher/dist/GooMap-Review-Snatcher"]
