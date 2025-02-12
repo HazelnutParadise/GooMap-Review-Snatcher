@@ -13,9 +13,12 @@ var searchedBuf = sync.Map{}
 var gettingReviewsBuf = sync.Map{}
 var gotReviewsBuf = sync.Map{}
 
+var failedBuf = sync.Map{}
+
 func SearchStores(uuid, storeName string) []datafetch.GoogleMapsStoreData {
 	searchingBuf.Store(uuid, storeName)
 	var stores []datafetch.GoogleMapsStoreData
+	var failed bool
 	for {
 		time.Sleep(time.Millisecond * 1000)
 		searchedBuf.Range(func(key, value interface{}) bool {
@@ -25,9 +28,22 @@ func SearchStores(uuid, storeName string) []datafetch.GoogleMapsStoreData {
 			}
 			return true
 		})
-		if stores != nil && len(stores) > 0 {
+		if len(stores) > 0 {
 			searchedBuf.Delete(uuid)
 			return stores
+		}
+
+		failedBuf.Range(func(key, value interface{}) bool {
+			if key.(string) == uuid {
+				failed = true
+				return false
+			}
+			return true
+		})
+
+		if failed {
+			failedBuf.Delete(uuid)
+			return nil
 		}
 	}
 }
@@ -35,6 +51,7 @@ func SearchStores(uuid, storeName string) []datafetch.GoogleMapsStoreData {
 func GetReviews(uuid, storeID string, pages int) datafetch.GoogleMapsStoreReviews {
 	gettingReviewsBuf.Store(uuid, [2]interface{}{storeID, pages})
 	var reviews datafetch.GoogleMapsStoreReviews
+	var failed bool
 	for {
 		time.Sleep(time.Millisecond * 1000)
 		gotReviewsBuf.Range(func(key, value any) bool {
@@ -44,9 +61,22 @@ func GetReviews(uuid, storeID string, pages int) datafetch.GoogleMapsStoreReview
 			}
 			return true
 		})
-		if reviews != nil && len(reviews) > 0 {
+		if len(reviews) > 0 {
 			gotReviewsBuf.Delete(uuid)
 			return reviews
+		}
+
+		failedBuf.Range(func(key, value interface{}) bool {
+			if key.(string) == uuid {
+				failed = true
+				return false
+			}
+			return true
+		})
+
+		if failed {
+			failedBuf.Delete(uuid)
+			return nil
 		}
 	}
 }
@@ -56,7 +86,7 @@ func KeepFetching() {
 		fetchStores()
 		fetchReviews()
 		// 可以加入適當的休眠以避免過度消耗 CPU
-		// time.Sleep(time.Millisecond * 100)
+		time.Sleep(time.Millisecond * 1000)
 	}
 }
 
@@ -77,7 +107,12 @@ func fetchStores() {
 		searchingBuf.Delete(uuid)
 
 		// 執行搜尋商店的動作
-		searchedBuf.Store(uuid, datafetch.GoogleMapsStores().Search(storeName))
+		searched := datafetch.GoogleMapsStores().Search(storeName)
+		if searched == nil {
+			failedBuf.Store(uuid, nil)
+			return
+		}
+		searchedBuf.Store(uuid, searched)
 	}
 }
 
@@ -100,6 +135,14 @@ func fetchReviews() {
 		gettingReviewsBuf.Delete(uuid)
 
 		// 執行取得評論的動作
-		gotReviewsBuf.Store(uuid, datafetch.GoogleMapsStores().GetReviews(storeID, pages))
+		reviews := datafetch.GoogleMapsStores().GetReviews(storeID, pages, datafetch.GoogleMapsStoreReviewsFetchingOptions{
+			MaxWaitingInterval: 3000,
+			SortBy:             datafetch.SortByRelevance,
+		})
+		if reviews == nil {
+			failedBuf.Store(uuid, nil)
+			return
+		}
+		gotReviewsBuf.Store(uuid, reviews)
 	}
 }

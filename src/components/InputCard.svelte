@@ -1,4 +1,5 @@
 <script>
+    import InfoCard from './InfoCard.svelte';
     export let searchInputStr;
     export let selectedStore;
     export let pagesToFetch;
@@ -24,12 +25,13 @@
             <label for="pages">輸入頁數，0代表全部</label>
             <input type="number" name="pages" placeholder="輸入頁數" bind:value={pagesToFetch} />
         </div>
-        <button type="submit">確定</button>
+        <button type="submit" class="button">確定</button>
     </form>
 {:else}
+    <InfoCard/>
     <form on:submit|preventDefault={handleSearch} class="input-form" bind:this={form}>
         <input type="text" placeholder="輸入關鍵字" bind:value={searchInputStr} />
-        <button type="submit">搜尋</button>
+        <button type="submit" class="button">搜尋</button>
     </form>
 {/if}
 
@@ -83,6 +85,11 @@
         color: white;
         font-size: 1rem;
         cursor: pointer;
+    }
+
+    .button:hover {
+        background-color: #f1f1f1;
+        color: #0A0903;
     }
 
     .store-select {

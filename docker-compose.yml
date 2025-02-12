@@ -1,0 +1,6 @@
+services:
+  web:
+    image: GooMap-Review-Snatcher
+    ports:
+      - "5432:8000"
+    restart: unless-stopped

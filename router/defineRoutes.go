@@ -30,6 +30,10 @@ func defineRoutes(r *gin.Engine) {
 		fmt.Println("searchUUID", searchUUID)
 		fmt.Println("storeName", storeName)
 		stores := app.SearchStores(searchUUID, storeName)
+		if stores == nil {
+			ctx.JSON(500, gin.H{"error": "Failed to fetch data"})
+			return
+		}
 		ctx.JSON(200, stores)
 	})
 	api.GET("/reviews", func(ctx *gin.Context) {
@@ -42,6 +46,10 @@ func defineRoutes(r *gin.Engine) {
 		// 產生一個 UUID
 		reviewUUID := uuid.New().String()
 		reviews := app.GetReviews(reviewUUID, storeID, conv.ParseInt(pages))
+		if reviews == nil {
+			ctx.JSON(500, gin.H{"error": "Failed to fetch data"})
+			return
+		}
 		ctx.JSON(200, reviews)
 	})
 }

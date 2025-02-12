@@ -1,5 +1,7 @@
 <script lang="ts">
+    import { onMount } from 'svelte';
     import InputCard from '../components/InputCard.svelte'
+    import Loader from '../components/Loader.svelte'
     export let title: string
     export let subtitle: string
     const searchStoreUrl = "/api/search";
@@ -14,6 +16,11 @@
     const handleSearch = async() => {
         isLoading = true;
         console.log(searchInputStr);
+        if (searchInputStr === "") {
+            alert('請輸入搜尋關鍵字');
+            isLoading = false;
+            return;
+        }
         try{
             const res = await fetch(searchStoreUrl+`?storeName=${searchInputStr}`);
             if (!res.ok) {
@@ -33,6 +40,11 @@
     const handleGetReview = async() => {
         isLoading = true;
         console.log(selectedStore);
+        if (selectedStore === "") {
+            alert('請選擇店家');
+            isLoading = false;
+            return;
+        }
         try{
             const res = await fetch(getReviewsUrl+`?storeID=${selectedStore.ID}&pages=${pagesToFetch}`);
             if (!res.ok) {
@@ -49,19 +61,72 @@
             isLoading = false;
         }
     }
+
+    const download = (type) => {
+        const a = document.createElement("a");
+        let url = "";
+        switch (type) {
+            case "csv":
+                // 添加 BOM 標記
+                const BOM = new Uint8Array([0xEF, 0xBB, 0xBF]);
+                // 建立 CSV 內容，加入標題列
+                const headers = Object.keys(reviews[0]).join(',');
+                const rows = reviews.map(row => 
+                    Object.values(row)
+                        .map(value => {
+                            // 處理數值、字串中的特殊字元
+                            if (typeof value === 'string') {
+                                // 如果內容包含逗號、換行或雙引號，就用雙引號包起來
+                                if (value.includes(',') || value.includes('\n') || value.includes('"')) {
+                                    return `"${value.replace(/"/g, '""')}"`;
+                                }
+                            }
+                            return value;
+                        })
+                        .join(',')
+                );
+                const csvContent = headers + '\n' + rows.join('\n');
+                
+                // 合併 BOM 和 CSV 內容
+                const csvBlob = new Blob([BOM, csvContent], { type: 'text/csv;charset=utf-8' });
+                url = window.URL.createObjectURL(csvBlob);
+                
+                a.href = url;
+                a.download = `${selectedStore.Name}.csv`;
+                a.click();
+                break;
+            case "json":
+                const json = JSON.stringify(reviews, null, 2);
+                const jsonBlob = new Blob([json], { type: 'application/json;charset=utf-8' });
+                url = window.URL.createObjectURL(jsonBlob);
+                a.href = url;
+                a.download = `${selectedStore.Name}.json`;
+                a.click();
+                break;
+            default:
+                break;
+        }
+        window.URL.revokeObjectURL(url);
+    }
+
+    onMount(async () => {
+        getNavbar();
+    });
 </script>
 
 <svelte:head>
     <title>{title} - 榛果繽紛樂</title>
 </svelte:head>
 
+<div id="navbar-placeholder"></div>
 <div class="container">
+    <img src="https://src.hazelnut-paradise.com/GooMapReviewSnatcher.png" alt="GooMapReviewSnatcher" style="width: 100%; max-width: 150px;"/>
     <div class="title-box">
         <h1 class="title">{title}</h1>
         <h2 class="subtitle">{subtitle}</h2>
     </div>
     {#if isLoading}
-        loading...
+        <Loader/>
     {:else if Object.keys(reviews).length == 0}
     <InputCard
         bind:pagesToFetch
@@ -72,34 +137,41 @@
         {storeData}
     />
     {:else}
-    <button class="reset-button" on:click={()=> {
+    <button class="reset-button button" on:click={()=> {
         searchInputStr = '';
         storeData = [];
         reviews = [];
     }}>查詢其他商家</button>
-    <h3>{selectedStore.Name}</h3>
-    <div class="review-table-box">
-        <table class="review-table">
-            <thead>
-                <tr>
-                {#each Object.keys(reviews[0]) as key}
-                    <th>{key}</th>
-                {/each}
-                </tr>
-            </thead>
-            <tbody>
-                {#each reviews as review}
+    <div class="review-box">
+        <h3 class="store-name">{selectedStore.Name}</h3>
+        <button class="download-button button" on:click={() => download("csv")}>下載 CSV</button>
+        <button class="download-button button" on:click={() => download("json")}>下載 JSON</button>
+        <div class="review-table-box">
+            <table class="review-table">
+                <thead>
                     <tr>
-                        {#each Object.values(review) as value}
-                            <td>{value}</td>
-                        {/each}
+                    {#each Object.keys(reviews[0]) as key}
+                        <th>{key}</th>
+                    {/each}
                     </tr>
-                {/each}
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    {#each reviews as review}
+                        <tr>
+                            {#each Object.values(review) as value}
+                                <td>{value}</td>
+                            {/each}
+                        </tr>
+                    {/each}
+                </tbody>
+            </table>
+        </div>
     </div>
     {/if}
 </div>
+<footer>
+    2025 - 榛果繽紛樂
+</footer>
 
 <style>
     .container {
@@ -107,8 +179,10 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        height: 100vh;
-        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        min-height: 100vh;
+        padding-top: 20px;
+        padding-bottom: 70px;
+        /* background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); */
     }
 
     .title-box {
@@ -116,7 +190,7 @@
         flex-direction: column;
         align-items: start;
         justify-content: center;
-        margin-bottom: 2rem;
+        margin-bottom: 1rem;
         transition: transform 0.3s ease;
     }
 
@@ -135,6 +209,14 @@
         font-size: 1.5rem;
         color: #0A0903;
         margin: 0;
+    }
+
+    .review-box {
+        width: 80%;
+    }
+
+    .store-name {
+        font-size: 1.5rem;
     }
 
     .review-table {
@@ -169,7 +251,7 @@
     }
 
     .review-table-box {
-        width: 80%;
+        width: 100%;
         height: 500px;
         overflow: auto;
         background-color: white;
@@ -199,8 +281,9 @@
     }
 
     .reset-button {
-        height: 40px;
+        height: 50px;
         width: 20%;
+        min-width: 200px;
         border-radius: 15px;
         border: none;
         background-color: #0A0903;
@@ -208,6 +291,34 @@
         font-size: 1rem;
         cursor: pointer;
         margin-bottom: 1rem;
+    }
+
+    .download-button {
+        height: 40px;
+        width: 20%;
+        min-width: 200px;
+        border-radius: 15px;
+        border: none;
+        background-color: #0A0903;
+        color: white;
+        font-size: 1rem;
+        cursor: pointer;
+        margin-bottom: 1rem;
+    }
+
+    footer {
+        width: 100vw;
+        height: 50px;
+        background-color: #0A0903;
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .button:hover {
+        background-color: #f1f1f1;
+        color: #0A0903;
     }
 
     @keyframes pop {
