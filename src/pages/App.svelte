@@ -168,10 +168,6 @@
     </div>
     {/if}
 </div>
-<div id="navbar-placeholder" style="height: 50px; z-index: 100;"></div>
-<footer>
-    2025 - 榛果繽紛樂
-</footer>
 
 <style>
     .container {
@@ -304,16 +300,6 @@
         font-size: 1rem;
         cursor: pointer;
         margin-bottom: 1rem;
-    }
-
-    footer {
-        width: 100vw;
-        height: 50px;
-        background-color: black;
-        color: white;
-        display: flex;
-        justify-content: center;
-        align-items: center;
     }
 
     .button:hover {

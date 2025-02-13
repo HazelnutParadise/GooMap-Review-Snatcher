@@ -26,18 +26,20 @@ func GinRouter() http.Handler {
 	// page := func(c string) gin.HandlerFunc {
 	// 	return gin.WrapH(golte.Page(c))
 	// }
-	// layout := func(c string) gin.HandlerFunc {
-	// 	return func(ctx *gin.Context) {
-	// 		handler := golte.Layout(c)
-	// 		wrapMiddleware(&handler, ctx)
-	// 	}
-	// }
+	layout := func(c string) gin.HandlerFunc {
+		return func(ctx *gin.Context) {
+			handler := sveltigo.Layout(c)
+			wrapMiddleware(&handler, ctx)
+		}
+	}
 
 	r := gin.Default()
 	// register the main Golte middleware
 	r.Use(func(ctx *gin.Context) {
 		wrapMiddleware(&build.Sveltigo, ctx)
 	})
+
+	r.Use(layout("layouts/Layout"))
 
 	defineRoutes(r)
 

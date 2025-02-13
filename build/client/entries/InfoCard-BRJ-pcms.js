@@ -1,2 +1,2 @@
-import{S as l,i as o,s as i,o as s,d,h as c,v as h,w as f,G as u,A as m}from"../chunks/index-GWTj1K6P.js";function v(n){let t,a=`<strong>估咩評論小扒手</strong> 幫你輕鬆爬取 Google Maps 商家評論，<br/>
+import{S as l,i as o,s as i,o as s,d,h as c,v as h,w as f,M as u,A as m}from"../chunks/index-CJP0XVN7.js";function v(n){let t,a=`<strong>估咩評論小扒手</strong> 幫你輕鬆爬取 Google Maps 商家評論，<br/>
     輸入店名立即開始吧！`;return{c(){t=m("div"),t.innerHTML=a,this.h()},l(e){t=f(e,"DIV",{class:!0,"data-svelte-h":!0}),u(t)!=="svelte-1ndbl8w"&&(t.innerHTML=a),this.h()},h(){h(t,"class","info-card svelte-15kz9bl")},m(e,r){c(e,t,r)},p:s,i:s,o:s,d(e){e&&d(t)}}}class _ extends l{constructor(t){super(),o(this,t,null,v,i,{})}}export{_ as default};
