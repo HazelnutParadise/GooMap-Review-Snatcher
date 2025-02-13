@@ -22,7 +22,7 @@
     let bannerBox;
     let announcement;
     onMount(() => {
-        announcement = bannerBox.innerHTML;
+        if (bannerBox.innerHTML !== '') announcement = bannerBox.innerHTML;
 
         // 使用 MutationObserver 監聽 bannerBox 內容變化
         const observer = new MutationObserver(() => {
@@ -39,9 +39,12 @@
 
     $: { 
         if (announcement) {
-            bannerBox.innerHTML = announcement;
-            bannerBox.style.display = 'block';
-            console.log('強制插入公告');
+            if (bannerBox.innerHTML !== ''){
+                announcement = bannerBox.innerHTML;
+            }else {
+                bannerBox.innerHTML = announcement;
+                bannerBox.style.display = 'block';
+            }
         }
     }
 </script>
