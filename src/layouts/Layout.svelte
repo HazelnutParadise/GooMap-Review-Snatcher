@@ -22,15 +22,11 @@
     let bannerBox;
     let announcement;
     onMount(() => {
-        if (bannerBox.innerHTML.trim() !== '') {
-            bannerBox.style.display = 'block';
-            announcement = bannerBox.innerHTML;
-            console.log(announcement);
-        }
+        announcement = bannerBox.innerHTML;
 
         // 使用 MutationObserver 監聽 bannerBox 內容變化
         const observer = new MutationObserver(() => {
-            const closeButton = bannerBox.querySelector('#close-banner');
+            const closeButton = bannerBox.querySelector("Pistachio-Announcement＿global-banner").querySelector('#close-banner');
             if (closeButton) {
                 closeButton.addEventListener('click', () => {
                     bannerBox.style.display = 'none';
