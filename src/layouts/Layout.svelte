@@ -26,24 +26,26 @@
         if (bannerBox.innerHTML.trim() !== '') {
             bannerBox.style.display = 'block';
             announcement = bannerBox.innerHTML;
+            console.log(announcement);
         }
 
         // 使用 MutationObserver 監聽 bannerBox 內容變化
-        const observer = new MutationObserver(() => {
-            const closeButton = bannerBox.querySelector('#close-banner');
-            if (closeButton) {
-                closeButton.addEventListener('click', () => {
-                    bannerBox.style.display = 'none';
-                });
-            }
-        });
+        // const observer = new MutationObserver(() => {
+        //     const closeButton = bannerBox.querySelector('#close-banner');
+        //     if (closeButton) {
+        //         closeButton.addEventListener('click', () => {
+        //             bannerBox.style.display = 'none';
+        //         });
+        //     }
+        // });
 
-        observer.observe(bannerBox, { childList: true, subtree: true });
+        // observer.observe(bannerBox, { childList: true, subtree: true });
     });
 
     $: { 
         if (announcement) {
             bannerBox.innerHTML = announcement;
+            console.log('強制插入公告');
         }
     }
 </script>
