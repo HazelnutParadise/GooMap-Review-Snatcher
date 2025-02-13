@@ -2,7 +2,6 @@
     import { onMount } from 'svelte';
     import InputCard from '../components/InputCard.svelte';
     import Loader from '../components/Loader.svelte';
-    import AD from '../components/Ad.svelte';
     export let title;
     export let subtitle;
     const searchStoreUrl = "/api/search";
@@ -119,7 +118,6 @@
     <title>{title} - 榛果繽紛樂</title>
 </svelte:head>
 
-<div id="navbar-placeholder" style="height: 50px; z-index: 100;"></div>
 <div id="Pistachio-Announcement" style="display: fixed; top: 20px; left: 0; z-index: 100;"></div>
 <div class="container">
     <img src="https://src.hazelnut-paradise.com/GooMapReviewSnatcher.png" alt="GooMapReviewSnatcher" style="width: 100%; max-width: 150px;"/>
@@ -171,8 +169,8 @@
     </div>
     {/if}
 </div>
+<div id="navbar-placeholder" style="height: 50px; z-index: 100;"></div>
 <footer>
-    <AD/>
     2025 - 榛果繽紛樂
 </footer>
 
@@ -184,7 +182,7 @@
         justify-content: center;
         min-height: 100vh;
         padding-top: 20px;
-        padding-bottom: 70px;
+        padding-bottom: 20px;
         /* background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); */
     }
 
