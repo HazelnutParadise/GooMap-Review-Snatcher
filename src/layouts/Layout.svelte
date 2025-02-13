@@ -47,6 +47,7 @@
     $: { 
         if (announcement) {
             bannerBox.innerHTML = announcement;
+            bannerBox.style.display = 'block';
         }
     }
 </script>
