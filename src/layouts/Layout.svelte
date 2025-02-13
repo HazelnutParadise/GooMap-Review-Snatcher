@@ -34,7 +34,6 @@
             if (closeButton) {
                 closeButton.addEventListener('click', () => {
                     bannerBox.style.display = 'none';
-                    announcement = '';
                 });
             }
         });
@@ -45,7 +44,6 @@
     $: { 
         if (announcement) {
             bannerBox.innerHTML = announcement;
-            bannerBox.style.display = 'block';
         }
     }
 </script>
