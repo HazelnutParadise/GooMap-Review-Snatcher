@@ -23,7 +23,7 @@
         </div>
         <div class="pages-box">
             <label for="pages">輸入頁數，0代表全部</label>
-            <input type="number" name="pages" placeholder="輸入頁數" bind:value={pagesToFetch} />
+            <input type="number" inputmode="numeric" name="pages" placeholder="輸入頁數" bind:value={pagesToFetch} />
         </div>
         <button type="submit" class="button">確定</button>
     </form>
