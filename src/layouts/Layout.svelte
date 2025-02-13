@@ -22,7 +22,6 @@
     let bannerBox;
     let announcement;
     onMount(() => {
-        bannerBox = document.getElementById('Pistachio-Announcement');
         if (bannerBox.innerHTML.trim() !== '') {
             bannerBox.style.display = 'block';
             announcement = bannerBox.innerHTML;
@@ -30,16 +29,16 @@
         }
 
         // 使用 MutationObserver 監聽 bannerBox 內容變化
-        // const observer = new MutationObserver(() => {
-        //     const closeButton = bannerBox.querySelector('#close-banner');
-        //     if (closeButton) {
-        //         closeButton.addEventListener('click', () => {
-        //             bannerBox.style.display = 'none';
-        //         });
-        //     }
-        // });
+        const observer = new MutationObserver(() => {
+            const closeButton = bannerBox.querySelector('#close-banner');
+            if (closeButton) {
+                closeButton.addEventListener('click', () => {
+                    bannerBox.style.display = 'none';
+                });
+            }
+        });
 
-        // observer.observe(bannerBox, { childList: true, subtree: true });
+        observer.observe(bannerBox, { childList: true, subtree: true });
     });
 
     $: { 
