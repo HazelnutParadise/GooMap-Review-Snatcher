@@ -40,6 +40,7 @@
     $: { 
         if (announcement) {
             bannerBox.innerHTML = announcement;
+            bannerBox.style.display = 'block';
             console.log('強制插入公告');
         }
     }
