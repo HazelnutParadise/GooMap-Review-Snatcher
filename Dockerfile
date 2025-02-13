@@ -12,7 +12,7 @@ COPY . .
 # 明確設定 CGO_ENABLED，避免靜態連結問題
 RUN CGO_ENABLED=0 go build -o /app/bin/main .
 
-FROM scratch
+FROM alpine:latest
 
 COPY --from=builder /app/bin/main /main
 
