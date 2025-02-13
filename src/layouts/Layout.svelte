@@ -23,9 +23,7 @@
     let announcement;
     onMount(() => {
         bannerBox = document.getElementById('Pistachio-Announcement');
-        if (bannerBox.innerHTML.trim() === '') {
-            bannerBox.style.display = 'none';
-        } else {
+        if (bannerBox.innerHTML.trim() !== '') {
             bannerBox.style.display = 'block';
             announcement = bannerBox.innerHTML;
         }
