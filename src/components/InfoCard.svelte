@@ -5,6 +5,7 @@
 
 <style>
     .info-card {
+        max-width: 90vw;
         background-color: #70798C;
         border-radius: 20px;
         padding: 20px;

@@ -1,4 +1,4 @@
-FROM golang:1.23
+FROM golang:1.23 AS builder
 
 WORKDIR /app
 
@@ -12,4 +12,8 @@ COPY . .
 # 明確設定 CGO_ENABLED，避免靜態連結問題
 RUN CGO_ENABLED=0 go build -o /app/bin/main .
 
-CMD ["/app/bin/main"]
+FROM scratch
+
+COPY --from=builder /app/bin/main /main
+
+CMD ["/main"]

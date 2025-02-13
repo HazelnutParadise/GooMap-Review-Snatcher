@@ -1,2 +1,0 @@
-import{S as l,i as o,s as i,o as s,d,h as c,v as f,w as h,G as u,A as m}from"../chunks/index-CxwuwH1G.js";function v(n){let t,a=`<strong>估咩評論小扒手</strong> 幫你輕鬆爬取 Google Maps 商家評論，<br/>
-    輸入店名立即開始吧！`;return{c(){t=m("div"),t.innerHTML=a,this.h()},l(e){t=h(e,"DIV",{class:!0,"data-svelte-h":!0}),u(t)!=="svelte-1ndbl8w"&&(t.innerHTML=a),this.h()},h(){f(t,"class","info-card svelte-1ekwafl")},m(e,r){c(e,t,r)},p:s,i:s,o:s,d(e){e&&d(t)}}}class _ extends l{constructor(t){super(),o(this,t,null,v,i,{})}}export{_ as default};
