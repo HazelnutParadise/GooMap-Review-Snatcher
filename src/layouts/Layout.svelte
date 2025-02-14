@@ -20,15 +20,23 @@
 <script>
     import { onMount } from "svelte";
     let bannerContainer;
-    let bannerContent = ""
-    onMount(() => async () => {
-        while (true){
-            if (bannerContainer.innerHTML === "") {
-                bannerContainer.innerHTML = bannerContent;
-            } else {
-                bannerContent = bannerContainer.innerHTML;
-                console.log(bannerContent);
-            }
+    let bannerContent = "";
+    onMount(() => {
+        if (bannerContainer.innerHTML === "") {
+            bannerContainer.innerHTML = bannerContent;
+        } else {
+            bannerContent = bannerContainer.innerHTML;
+            console.log("first:" + bannerContent);
         }
+        (async () => {
+            while (true){
+                if (bannerContainer.innerHTML === "") {
+                    bannerContainer.innerHTML = bannerContent;
+                } else {
+                    bannerContent = bannerContainer.innerHTML;
+                    console.log(bannerContent);
+                }
+            }
+        })()
     });
 </script>
