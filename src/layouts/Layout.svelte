@@ -1,4 +1,4 @@
-<div id="Pistachio-Announcement" bind:this={bannerContainer} style="min-height: 50px; z-index: 100;"></div>
+<div id="Pistachio-Announcement" bind:this={bannerContainer} style="z-index: 100;"></div>
 <div id="navbar-placeholder" style="min-height: 50px; z-index: 100;"></div>
 <slot></slot>
 <footer>
@@ -21,11 +21,13 @@
     import { onMount } from "svelte";
     let bannerContainer;
     let bannerContent = ""
-    onMount(() => {
-        if (bannerContainer.innerHTML === "") {
-            bannerContainer.innerHTML = bannerContent;
-        } else {
-            bannerContent = bannerContainer.innerHTML;
+    onMount(() => async () => {
+        while (true){
+            if (bannerContainer.innerHTML === "") {
+                bannerContainer.innerHTML = bannerContent;
+            } else {
+                bannerContent = bannerContainer.innerHTML;
+            }
         }
     });
 </script>
