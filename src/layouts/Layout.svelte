@@ -1,6 +1,41 @@
-<div id="Pistachio-Announcement" style="z-index: 100;"></div>
+<script>
+    import { onMount, onDestroy } from "svelte";
+
+    let bannerContainer;
+
+    onMount(() => {
+        // 確保 #Pistachio-Announcement 存在，並防止 Svelte 移除它
+        bannerContainer = document.getElementById("Pistachio-Announcement");
+
+        if (bannerContainer) {
+            bannerContainer.setAttribute("data-preserve", "true"); // 標記這個元素不應該被修改
+        }
+
+        // 監聽 #Pistachio-Announcement 是否有變更（Workers 插入的內容）
+        const observer = new MutationObserver((mutations) => {
+            for (let mutation of mutations) {
+                if (mutation.type === "childList") {
+                    console.log("Workers 插入的橫幅變更偵測到:", mutation);
+                }
+            }
+        });
+
+        if (bannerContainer) {
+            observer.observe(bannerContainer, { childList: true, subtree: true });
+        }
+
+        return () => observer.disconnect(); // 確保組件卸載時停止監聽
+    });
+</script>
+
+<!-- 確保 Svelte 不會優化掉 #Pistachio-Announcement -->
+<div id="Pistachio-Announcement" bind:this={bannerContainer} style="z-index: 100; min-height: 50px;">
+    &nbsp; <!-- 避免 Svelte 移除這個 div -->
+</div>
+
 <div id="navbar-placeholder" style="min-height: 50px; z-index: 100;"></div>
 <slot></slot>
+
 <footer>
     2025 - 榛果繽紛樂
 </footer>
@@ -16,28 +51,3 @@
         align-items: center;
     }
 </style>
-
-<script>
-    import { onMount, onDestroy } from "svelte";
-
-    let bannerContainer;
-
-    onMount(() => {
-        // 監聽 `#Pistachio-Announcement` 是否有變化
-        const observer = new MutationObserver((mutations) => {
-            for (let mutation of mutations) {
-                if (mutation.type === "childList") {
-                    console.log("Workers 插入的橫幅變更偵測到:", mutation);
-                }
-            }
-        });
-
-        // 監聽 `#Pistachio-Announcement`
-        bannerContainer = document.getElementById("Pistachio-Announcement");
-        if (bannerContainer) {
-            observer.observe(bannerContainer, { childList: true, subtree: true });
-        }
-
-        return () => observer.disconnect(); // 確保組件卸載時停止監聽
-    });
-</script>
