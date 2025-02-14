@@ -1,4 +1,4 @@
-<div id="Pistachio-Announcement" bind:this={bannerContainer} style="z-index: 100;"></div>
+<div id="Pistachio-Announcement" bind:innerHTML={bannerHTML} bind:this={bannerContainer} contenteditable="true" style="z-index: 100;"></div>
 <div id="navbar-placeholder" style="min-height: 50px; z-index: 100;"></div>
 <slot></slot>
 <footer>
@@ -18,19 +18,23 @@
 </style>
 
 <script>
-    import { onMount, afterUpdate } from "svelte";
+    import {afterUpdate } from "svelte";
     let bannerContainer;
+    let bannerHTML = "";
     let bannerContent = "";
-    onMount(() => {
-        if (bannerContainer.innerHTML !== "") {
-            bannerContent = bannerContainer.innerHTML;
-            console.log("got banner" + bannerContent);
-        }
-    });
     afterUpdate(() => {
-        if (bannerContainer.innerHTML === "") {
-            bannerContainer.innerHTML = bannerContent;
+        if (bannerHTML === "") {
+            bannerHTML = bannerContent;
             console.log("set banner" + bannerContent);
+        } else {
+            bannerContent = bannerHTML;
+            console.log("get banner" + bannerHTML);
+        }
+
+        if (bannerContent === "") {
+            bannerContainer.style.display = "none";
+        } else {
+            bannerContainer.style.display = "block";
         }
     });
 </script>
