@@ -1,4 +1,4 @@
-<div id="Pistachio-Announcement" bind:this={bannerContainer}></div>
+<div id="Pistachio-Announcement" bind:this={bannerContainer} style="min-height: 50px; z-index: 100;"></div>
 <div id="navbar-placeholder" style="min-height: 50px; z-index: 100;"></div>
 <slot></slot>
 <footer>
