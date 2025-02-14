@@ -18,10 +18,10 @@
 </style>
 
 <script>
-    import { onMount } from "svelte";
+    import { afterUpdate } from "svelte";
     let bannerContainer;
     let bannerContent = "";
-    onMount(() => {
+    afterUpdate(() => {
         if (bannerContainer.innerHTML === "") {
             bannerContainer.innerHTML = bannerContent;
         } else {
