@@ -1,5 +1,6 @@
 <script>
     import { onMount, onDestroy } from "svelte";
+    import OneAd from "../components/OneAd.svelte";
 
     let bannerContainer;
 
@@ -35,7 +36,7 @@
 
 <div id="navbar-placeholder" style="min-height: 50px; z-index: 100;"></div>
 <slot></slot>
-
+<OneAd />
 <footer>
     2025 - 榛果繽紛樂
 </footer>
