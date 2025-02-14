@@ -1,3 +1,4 @@
+<div id="Pistachio-Announcement" bind:this={bannerContainer}></div>
 <div id="navbar-placeholder" style="min-height: 50px; z-index: 100;"></div>
 <slot></slot>
 <footer>
@@ -15,3 +16,16 @@
         align-items: center;
     }
 </style>
+
+<script>
+    import { onMount } from "svelte";
+    let bannerContainer;
+    let bannerContent = ""
+    onMount(() => {
+        if (bannerContainer.innerHTML === "") {
+            bannerContainer.innerHTML = bannerContent;
+        } else {
+            bannerContent = bannerContainer.innerHTML;
+        }
+    });
+</script>
