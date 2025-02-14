@@ -27,6 +27,7 @@
                 bannerContainer.innerHTML = bannerContent;
             } else {
                 bannerContent = bannerContainer.innerHTML;
+                console.log(bannerContent);
             }
         }
     });
