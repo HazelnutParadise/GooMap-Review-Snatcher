@@ -18,15 +18,19 @@
 </style>
 
 <script>
-    import { afterUpdate } from "svelte";
+    import { onMount, afterUpdate } from "svelte";
     let bannerContainer;
     let bannerContent = "";
+    onMount(() => {
+        if (bannerContainer.innerHTML !== "") {
+            bannerContent = bannerContainer.innerHTML;
+            console.log("got banner" + bannerContent);
+        }
+    });
     afterUpdate(() => {
         if (bannerContainer.innerHTML === "") {
             bannerContainer.innerHTML = bannerContent;
-        } else {
-            bannerContent = bannerContainer.innerHTML;
-            console.log("first:" + bannerContent);
+            console.log("set banner" + bannerContent);
         }
     });
 </script>
