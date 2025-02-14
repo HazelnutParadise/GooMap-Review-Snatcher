@@ -23,10 +23,12 @@
     let bannerHTML = "";
     let bannerContent = "";
     onMount(() => {
-        if (bannerHTML !== "") {
-            bannerContent = bannerHTML;
-            console.log("got banner" + bannerHTML);
-        }
+        interval = setInterval(() => {
+            if (bannerHTML === "") {
+                bannerContent = bannerHTML;
+                console.log("got banner" + bannerHTML);
+            }
+        }, 1); // 每秒檢查一次
     });
     afterUpdate(() => {
         if (bannerHTML === "") {
