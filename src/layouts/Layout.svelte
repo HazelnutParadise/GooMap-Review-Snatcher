@@ -29,7 +29,7 @@
 </script>
 
 <!-- 確保 Svelte 不會優化掉 #Pistachio-Announcement -->
-<div id="Pistachio-Announcement" bind:this={bannerContainer} style="z-index: 100; min-height: 50px;">
+<div id="Pistachio-Announcement" bind:this={bannerContainer} style="z-index: 100;">
     &nbsp; <!-- 避免 Svelte 移除這個 div -->
 </div>
 
