@@ -1,4 +1,4 @@
-<div id="Pistachio-Announcement" bind:innerHTML={bannerHTML} bind:this={bannerContainer} contenteditable="true" style="z-index: 100;"></div>
+<div id="Pistachio-Announcement" style="z-index: 100;"></div>
 <div id="navbar-placeholder" style="min-height: 50px; z-index: 100;"></div>
 <slot></slot>
 <footer>
@@ -18,32 +18,26 @@
 </style>
 
 <script>
-    import { onMount, afterUpdate, onDestroy } from "svelte";
+    import { onMount, onDestroy } from "svelte";
+
     let bannerContainer;
-    let bannerHTML = "";
-    let bannerContent = "";
-    let interval;
+
     onMount(() => {
-        interval = setInterval(() => {
-            if (bannerHTML !== "") {
-                bannerContent = bannerHTML;
-                console.log("got banner" + bannerHTML);
+        // 監聽 `#Pistachio-Announcement` 是否有變化
+        const observer = new MutationObserver((mutations) => {
+            for (let mutation of mutations) {
+                if (mutation.type === "childList") {
+                    console.log("Workers 插入的橫幅變更偵測到:", mutation);
+                }
             }
-        }, 1);
-    });
-    onDestroy(() => {
-        if (interval) clearInterval(interval);
-    });
-    afterUpdate(() => {
-        if (bannerHTML === "" && bannerContent !== "") {
-            bannerHTML = bannerContent;
-            console.log("set banner" + bannerContent);
+        });
+
+        // 監聽 `#Pistachio-Announcement`
+        bannerContainer = document.getElementById("Pistachio-Announcement");
+        if (bannerContainer) {
+            observer.observe(bannerContainer, { childList: true, subtree: true });
         }
 
-        if (bannerContent === "") {
-            bannerContainer.style.display = "none";
-        } else {
-            bannerContainer.style.display = "block";
-        }
+        return () => observer.disconnect(); // 確保組件卸載時停止監聽
     });
 </script>
