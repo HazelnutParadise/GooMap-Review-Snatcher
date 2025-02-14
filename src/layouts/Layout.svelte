@@ -18,21 +18,24 @@
 </style>
 
 <script>
-    import { onMount, afterUpdate } from "svelte";
+    import { onMount, afterUpdate, onDestroy } from "svelte";
     let bannerContainer;
     let bannerHTML = "";
     let bannerContent = "";
+    let interval;
     onMount(() => {
-        const interval = setInterval(() => {
+        interval = setInterval(() => {
             if (bannerHTML !== "") {
                 bannerContent = bannerHTML;
                 console.log("got banner" + bannerHTML);
             }
         }, 1);
-        return () => clearInterval(interval);
+    });
+    onDestroy(() => {
+        if (interval) clearInterval(interval);
     });
     afterUpdate(() => {
-        if (bannerHTML === "") {
+        if (bannerHTML === "" && bannerContent !== "") {
             bannerHTML = bannerContent;
             console.log("set banner" + bannerContent);
         }
