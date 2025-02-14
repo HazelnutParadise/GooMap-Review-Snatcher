@@ -28,15 +28,5 @@
             bannerContent = bannerContainer.innerHTML;
             console.log("first:" + bannerContent);
         }
-        (async () => {
-            while (true){
-                if (bannerContainer.innerHTML === "") {
-                    bannerContainer.innerHTML = bannerContent;
-                } else {
-                    bannerContent = bannerContainer.innerHTML;
-                    console.log(bannerContent);
-                }
-            }
-        })()
     });
 </script>
