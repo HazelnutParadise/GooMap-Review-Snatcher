@@ -2,7 +2,9 @@ package router
 
 import (
 	"GooMap-Review-Snatcher/app"
+	"encoding/json"
 	"fmt"
+	"net/http"
 
 	"github.com/HazelnutParadise/Go-Utils/conv"
 	"github.com/HazelnutParadise/sveltigo"
@@ -51,5 +53,28 @@ func defineRoutes(r *gin.Engine) {
 			return
 		}
 		ctx.JSON(200, reviews)
+	})
+
+	api.POST("/review-mining", func(ctx *gin.Context) {
+		client := http.DefaultClient
+		req, err := http.NewRequest("POST", "https://storecoach.hazelnut-paradise.com/api/review-mining", ctx.Request.Body)
+		if err != nil {
+			ctx.JSON(500, gin.H{"error": err.Error()})
+			return
+		}
+		req.Header.Set("Content-Type", "application/json")
+		resp, err := client.Do(req)
+		if err != nil {
+			ctx.JSON(500, gin.H{"error": err.Error()})
+			return
+		}
+		defer resp.Body.Close()
+		var result map[string]any
+		err = json.NewDecoder(resp.Body).Decode(&result)
+		if err != nil {
+			ctx.JSON(500, gin.H{"error": err.Error()})
+			return
+		}
+		ctx.JSON(200, result)
 	})
 }
