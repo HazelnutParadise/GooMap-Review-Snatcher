@@ -107,7 +107,12 @@ func fetchStores() {
 		searchingBuf.Delete(uuid)
 
 		// 執行搜尋商店的動作
-		searched := datafetch.GoogleMapsStores().Search(storeName)
+		fetcher := datafetch.GoogleMapsStores()
+		if fetcher == nil {
+			failedBuf.Store(uuid, nil)
+			return
+		}
+		searched := fetcher.Search(storeName)
 		if searched == nil {
 			failedBuf.Store(uuid, nil)
 			return
@@ -135,7 +140,12 @@ func fetchReviews() {
 		gettingReviewsBuf.Delete(uuid)
 
 		// 執行取得評論的動作
-		reviews := datafetch.GoogleMapsStores().GetReviews(storeID, pages, datafetch.GoogleMapsStoreReviewsFetchingOptions{
+		fetcher := datafetch.GoogleMapsStores()
+		if fetcher == nil {
+			failedBuf.Store(uuid, nil)
+			return
+		}
+		reviews := fetcher.GetReviews(storeID, pages, datafetch.GoogleMapsStoreReviewsFetchingOptions{
 			MaxWaitingInterval_Milliseconds: 3000,
 			SortBy:                          datafetch.SortByRelevance,
 		})

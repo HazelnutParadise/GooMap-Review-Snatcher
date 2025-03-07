@@ -71,7 +71,13 @@
       <thead>
         <tr>
           {#each Object.keys(reviews[0]) as key}
-            <th>{key}</th>
+            {#if key === "content"}
+              <th style="min-width: 500px;">{key}</th>
+            {:else if key === "reviewer_id"}
+              <th style="min-width: 400px;">{key}</th>
+            {:else}
+              <th>{key}</th>
+            {/if}
           {/each}
         </tr>
       </thead>
