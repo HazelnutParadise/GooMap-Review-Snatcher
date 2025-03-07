@@ -136,8 +136,8 @@ func fetchReviews() {
 
 		// 執行取得評論的動作
 		reviews := datafetch.GoogleMapsStores().GetReviews(storeID, pages, datafetch.GoogleMapsStoreReviewsFetchingOptions{
-			MaxWaitingInterval: 3000,
-			SortBy:             datafetch.SortByRelevance,
+			MaxWaitingInterval_Milliseconds: 3000,
+			SortBy:                          datafetch.SortByRelevance,
 		})
 		if reviews == nil {
 			failedBuf.Store(uuid, nil)

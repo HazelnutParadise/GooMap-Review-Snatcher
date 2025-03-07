@@ -4,7 +4,7 @@ go 1.23.6
 
 require (
 	github.com/HazelnutParadise/Go-Utils v0.8.0
-	github.com/HazelnutParadise/insyra v0.1.4
+	github.com/HazelnutParadise/insyra v0.1.5
 	github.com/HazelnutParadise/sveltigo v0.0.3
 	github.com/gin-gonic/gin v1.10.0
 	github.com/google/uuid v1.6.0
@@ -39,7 +39,7 @@ require (
 	golang.org/x/exp v0.0.0-20241217172543-b2144cdd0a67 // indirect
 	golang.org/x/net v0.35.0 // indirect
 	golang.org/x/sys v0.30.0 // indirect
-	golang.org/x/text v0.22.0 // indirect
+	golang.org/x/text v0.23.0 // indirect
 	google.golang.org/protobuf v1.36.5 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
