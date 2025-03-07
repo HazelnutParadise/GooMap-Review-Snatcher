@@ -64,7 +64,7 @@
     >下載 JSON</button
   >
   <button class="mining-button button" on:click={() => mining(true)}
-    >使用 StoreCoach 探勘</button
+    >使用 <strong>StoreCoach</strong> 探勘</button
   >
   <div class="review-table-box">
     <table class="review-table">
