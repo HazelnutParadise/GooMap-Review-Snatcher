@@ -2,14 +2,15 @@
   import { onMount } from "svelte";
 
   export let selectedStore;
-  export let searchInputStr;
-  export let storeData;
   export let reviews;
   export let download;
   export let handleReset;
 
   const mining = async (openNewPage) => {
-    const reviewContent = reviews.map((review) => review.content);
+    const [reviewContent, reviewRating] = reviews.map((review) => [
+      review.content,
+      review.rating,
+    ]);
     let dataUUID = "";
 
     const res = await fetch("/api/review-mining", {
@@ -20,6 +21,7 @@
       body: JSON.stringify({
         storeName: selectedStore.Name,
         reviews: reviewContent,
+        ratings: reviewRating,
       }),
     });
     if (res.ok) {

@@ -160,14 +160,7 @@
       {handleGetReview}
     />
   {:else}
-    <Result
-      bind:storeData
-      bind:reviews
-      {selectedStore}
-      {searchInputStr}
-      {download}
-      {handleReset}
-    />
+    <Result bind:reviews {selectedStore} {download} {handleReset} />
   {/if}
 </div>
 
