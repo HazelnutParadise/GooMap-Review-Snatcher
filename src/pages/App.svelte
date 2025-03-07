@@ -14,6 +14,15 @@
   let reviews = [];
 
   let isLoading = false;
+
+  const handleReset = () => {
+    searchInputStr = "";
+    selectedStore = "";
+    pagesToFetch = 1;
+    storeData = [];
+    reviews = [];
+  };
+
   const handleSearch = async () => {
     isLoading = true;
     console.log(searchInputStr);
@@ -143,15 +152,22 @@
     <Loader />
   {:else if Object.keys(reviews).length == 0}
     <InputCard
-      bind:pagesToFetch
       bind:searchInputStr
       bind:selectedStore
+      bind:storeData
+      bind:pagesToFetch
       {handleSearch}
       {handleGetReview}
-      {storeData}
     />
   {:else}
-    <Result {selectedStore} {searchInputStr} {storeData} {reviews} {download} />
+    <Result
+      bind:storeData
+      bind:reviews
+      {selectedStore}
+      {searchInputStr}
+      {download}
+      {handleReset}
+    />
   {/if}
 </div>
 

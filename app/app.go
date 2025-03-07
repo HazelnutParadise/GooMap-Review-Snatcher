@@ -4,19 +4,36 @@ import (
 	"sync"
 	"time"
 
+	"github.com/HazelnutParadise/insyra"
 	"github.com/HazelnutParadise/insyra/datafetch"
 )
 
-var searchingBuf = sync.Map{}
+var toSearchBuf = insyra.NewDataList()
+
+type searchingDataStruct struct {
+	UUID      string
+	StoreName string
+}
+
 var searchedBuf = sync.Map{}
 
-var gettingReviewsBuf = sync.Map{}
+var toGetReviewsBuf = insyra.NewDataList()
+
+type gettingReviewsDataStruct struct {
+	UUID    string
+	StoreID string
+	Pages   int
+}
+
 var gotReviewsBuf = sync.Map{}
 
 var failedBuf = sync.Map{}
 
 func SearchStores(uuid, storeName string) []datafetch.GoogleMapsStoreData {
-	searchingBuf.Store(uuid, storeName)
+	toSearchBuf.InsertAt(0, searchingDataStruct{
+		UUID:      uuid,
+		StoreName: storeName,
+	})
 	var stores []datafetch.GoogleMapsStoreData
 	var failed bool
 	for {
@@ -49,7 +66,11 @@ func SearchStores(uuid, storeName string) []datafetch.GoogleMapsStoreData {
 }
 
 func GetReviews(uuid, storeID string, pages int) datafetch.GoogleMapsStoreReviews {
-	gettingReviewsBuf.Store(uuid, [2]interface{}{storeID, pages})
+	toGetReviewsBuf.InsertAt(0, gettingReviewsDataStruct{
+		UUID:    uuid,
+		StoreID: storeID,
+		Pages:   pages,
+	})
 	var reviews datafetch.GoogleMapsStoreReviews
 	var failed bool
 	for {
@@ -91,20 +112,11 @@ func KeepFetching() {
 }
 
 func fetchStores() {
-	var uuid string
-	var storeName string
-	var found bool
-
-	searchingBuf.Range(func(key, value any) bool {
-		uuid = key.(string)
-		storeName = value.(string)
-		found = true
-		return false // 停止迭代，只取第一個項目
-	})
-
-	if found {
+	if toSearchBuf.Len() > 0 {
 		// 從 map 中移除該項目
-		searchingBuf.Delete(uuid)
+		searchingData := toSearchBuf.Pop().(searchingDataStruct)
+		uuid := searchingData.UUID
+		storeName := searchingData.StoreName
 
 		// 執行搜尋商店的動作
 		fetcher := datafetch.GoogleMapsStores()
@@ -122,22 +134,11 @@ func fetchStores() {
 }
 
 func fetchReviews() {
-	var uuid string
-	var storeID string
-	var pages int
-	var found bool
-
-	gettingReviewsBuf.Range(func(key, value any) bool {
-		uuid = key.(string)
-		storeID = value.([2]any)[0].(string)
-		pages = value.([2]any)[1].(int)
-		found = true
-		return false // 停止迭代，只取第一個項目
-	})
-
-	if found {
-		// 從 map 中移除該項目
-		gettingReviewsBuf.Delete(uuid)
+	if toGetReviewsBuf.Len() > 0 {
+		data := toGetReviewsBuf.Pop().(gettingReviewsDataStruct)
+		uuid := data.UUID
+		storeID := data.StoreID
+		pages := data.Pages
 
 		// 執行取得評論的動作
 		fetcher := datafetch.GoogleMapsStores()

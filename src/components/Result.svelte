@@ -6,6 +6,7 @@
   export let storeData;
   export let reviews;
   export let download;
+  export let handleReset;
 
   const mining = async (openNewPage) => {
     const reviewContent = reviews.map((review) => review.content);
@@ -47,14 +48,7 @@
   });
 </script>
 
-<button
-  class="reset-button button"
-  on:click={() => {
-    searchInputStr = "";
-    storeData = [];
-    reviews = [];
-  }}>查詢其他商家</button
->
+<button class="reset-button button" on:click={handleReset}>查詢其他商家</button>
 <div class="review-box">
   <h3 class="store-name">{selectedStore.Name}</h3>
   <button class="download-button button" on:click={() => download("csv")}
