@@ -34,33 +34,15 @@ func SearchStores(uuid, storeName string) []datafetch.GoogleMapsStoreData {
 		UUID:      uuid,
 		StoreName: storeName,
 	})
-	var stores []datafetch.GoogleMapsStoreData
-	var failed bool
 	for {
 		time.Sleep(time.Millisecond * 1000)
-		searchedBuf.Range(func(key, value interface{}) bool {
-			if key.(string) == uuid {
-				stores = value.([]datafetch.GoogleMapsStoreData)
-				return false
-			}
-			return true
-		})
-		if len(stores) > 0 {
-			searchedBuf.Delete(uuid)
+		if storesData, ok := searchedBuf.LoadAndDelete(uuid); ok {
+			stores := storesData.([]datafetch.GoogleMapsStoreData)
 			return stores
-		}
-
-		failedBuf.Range(func(key, value interface{}) bool {
-			if key.(string) == uuid {
-				failed = true
-				return false
+		} else {
+			if _, ok := failedBuf.LoadAndDelete(uuid); ok {
+				return nil
 			}
-			return true
-		})
-
-		if failed {
-			failedBuf.Delete(uuid)
-			return nil
 		}
 	}
 }
@@ -71,33 +53,15 @@ func GetReviews(uuid, storeID string, pages int) datafetch.GoogleMapsStoreReview
 		StoreID: storeID,
 		Pages:   pages,
 	})
-	var reviews datafetch.GoogleMapsStoreReviews
-	var failed bool
+
 	for {
 		time.Sleep(time.Millisecond * 1000)
-		gotReviewsBuf.Range(func(key, value any) bool {
-			if key.(string) == uuid {
-				reviews = value.(datafetch.GoogleMapsStoreReviews)
-				return false
+		if reviews, ok := gotReviewsBuf.LoadAndDelete(uuid); ok {
+			return reviews.(datafetch.GoogleMapsStoreReviews)
+		} else {
+			if _, ok := failedBuf.LoadAndDelete(uuid); ok {
+				return nil
 			}
-			return true
-		})
-		if len(reviews) > 0 {
-			gotReviewsBuf.Delete(uuid)
-			return reviews
-		}
-
-		failedBuf.Range(func(key, value interface{}) bool {
-			if key.(string) == uuid {
-				failed = true
-				return false
-			}
-			return true
-		})
-
-		if failed {
-			failedBuf.Delete(uuid)
-			return nil
 		}
 	}
 }
