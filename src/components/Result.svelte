@@ -1,12 +1,16 @@
 <script>
   import { onMount } from "svelte";
+  import Redirecting from "./Redirecting.svelte";
 
   export let selectedStore;
   export let reviews;
   export let download;
   export let handleReset;
 
+  let goMining = false;
+
   const mining = async (openNewPage) => {
+    goMining = true;
     const [reviewContent, reviewRating] = reviews.map((review) => [
       review.content,
       review.rating,
@@ -36,6 +40,7 @@
     a.href = `https://storecoach.hazelnut-paradise.com/review-mining/${dataUUID}`;
     if (openNewPage) a.target = "_blank";
     a.click();
+    goMining = false;
   };
 
   let queryParams = {};
@@ -50,45 +55,51 @@
   });
 </script>
 
-<button class="reset-button button" on:click={handleReset}>查詢其他商家</button>
-<div class="review-box">
-  <h3 class="store-name">{selectedStore.Name}</h3>
-  <button class="download-button button" on:click={() => download("csv")}
-    >下載 CSV</button
+{#if goMining}
+  <Redirecting />
+{:else}
+  <button class="reset-button button" on:click={handleReset}
+    >查詢其他商家</button
   >
-  <button class="download-button button" on:click={() => download("json")}
-    >下載 JSON</button
-  >
-  <button class="mining-button button" on:click={() => mining(true)}
-    >使用 <strong>StoreCoach</strong> 探勘</button
-  >
-  <div class="review-table-box">
-    <table class="review-table">
-      <thead>
-        <tr>
-          {#each Object.keys(reviews[0]) as key}
-            {#if key === "content"}
-              <th style="min-width: 500px;">{key}</th>
-            {:else if key === "reviewer_id"}
-              <th style="min-width: 400px;">{key}</th>
-            {:else}
-              <th>{key}</th>
-            {/if}
-          {/each}
-        </tr>
-      </thead>
-      <tbody>
-        {#each reviews as review}
+  <div class="review-box">
+    <h3 class="store-name">{selectedStore.Name}</h3>
+    <button class="download-button button" on:click={() => download("csv")}
+      >下載 CSV</button
+    >
+    <button class="download-button button" on:click={() => download("json")}
+      >下載 JSON</button
+    >
+    <button class="mining-button button" on:click={() => mining(true)}
+      >使用 <strong>StoreCoach</strong> 探勘</button
+    >
+    <div class="review-table-box">
+      <table class="review-table">
+        <thead>
           <tr>
-            {#each Object.values(review) as value}
-              <td>{value}</td>
+            {#each Object.keys(reviews[0]) as key}
+              {#if key === "content"}
+                <th style="min-width: 500px;">{key}</th>
+              {:else if key === "reviewer_id"}
+                <th style="min-width: 400px;">{key}</th>
+              {:else}
+                <th>{key}</th>
+              {/if}
             {/each}
           </tr>
-        {/each}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {#each reviews as review}
+            <tr>
+              {#each Object.values(review) as value}
+                <td>{value}</td>
+              {/each}
+            </tr>
+          {/each}
+        </tbody>
+      </table>
+    </div>
   </div>
-</div>
+{/if}
 
 <style>
   .review-box {
@@ -160,10 +171,18 @@
     background: #555;
   }
 
+  .button {
+    min-width: 250px;
+  }
+
+  .button:hover {
+    background-color: #f1f1f1;
+    color: #0a0903;
+  }
+
   .reset-button {
     height: 50px;
     width: 20%;
-    min-width: 200px;
     border-radius: 15px;
     border: 2px solid #0a0903;
     background-color: #0a0903;
@@ -176,7 +195,6 @@
   .download-button {
     height: 40px;
     width: 20%;
-    min-width: 200px;
     border-radius: 15px;
     border: 1px solid #0a0903;
     background-color: #0a0903;
@@ -186,15 +204,9 @@
     margin-bottom: 1rem;
   }
 
-  .button:hover {
-    background-color: #f1f1f1;
-    color: #0a0903;
-  }
-
   .mining-button {
     height: 40px;
     width: 20%;
-    min-width: 200px;
     border-radius: 15px;
     border: 1px solid #ffa400;
     font-size: 1rem;
