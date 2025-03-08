@@ -11,10 +11,8 @@
 
   const mining = async (openNewPage) => {
     goMining = true;
-    const [reviewContent, reviewRating] = reviews.map((review) => [
-      review.content,
-      review.rating,
-    ]);
+    const reviewContent = reviews.map((review) => review.content);
+    const reviewRating = reviews.map((review) => review.rating);
     let dataUUID = "";
 
     const res = await fetch("/api/review-mining", {
@@ -42,7 +40,7 @@
       ? window.open(url, "_blank")
       : window.open(url, "_self");
 
-    if (openNewPage) goMining = false;
+    if (openNewPage && !isSafari) goMining = false;
   };
 
   let queryParams = {};
