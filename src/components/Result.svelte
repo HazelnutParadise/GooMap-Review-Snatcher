@@ -36,8 +36,11 @@
       alert("無法使用 StoreCoach 探勘");
       return;
     }
+    const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
     const url = `https://storecoach.hazelnut-paradise.com/review-mining/${dataUUID}`;
-    openNewPage ? window.open(url, "_blank") : window.open(url, "_self");
+    openNewPage && !isSafari
+      ? window.open(url, "_blank")
+      : window.open(url, "_self");
 
     goMining = false;
   };
