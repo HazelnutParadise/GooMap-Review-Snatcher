@@ -42,7 +42,7 @@
       ? window.open(url, "_blank")
       : window.open(url, "_self");
 
-    goMining = false;
+    if (openNewPage) goMining = false;
   };
 
   let queryParams = {};
