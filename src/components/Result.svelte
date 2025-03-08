@@ -36,7 +36,7 @@
       return;
     }
     const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-    const url = `https://storecoach.hazelnut-paradise.com/review-mining/${dataUUID}/`;
+    const url = `https://storecoach.hazelnut-paradise.com/review-mining/${dataUUID}`;
     openNewPage && !isSafari
       ? window.open(url, "_blank")
       : window.open(url, "_self");
