@@ -32,6 +32,7 @@
     } else {
       console.error("Error:", res.statusText);
       alert("無法使用 StoreCoach 探勘");
+      goMining = false;
       return;
     }
     const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
