@@ -36,10 +36,9 @@
       alert("無法使用 StoreCoach 探勘");
       return;
     }
-    const a = document.createElement("a");
-    a.href = `https://storecoach.hazelnut-paradise.com/review-mining/${dataUUID}`;
-    if (openNewPage) a.target = "_blank";
-    a.click();
+    const url = `https://storecoach.hazelnut-paradise.com/review-mining/${dataUUID}`;
+    openNewPage ? window.open(url, "_blank") : window.open(url, "_self");
+
     goMining = false;
   };
 
