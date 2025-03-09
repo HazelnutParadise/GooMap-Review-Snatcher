@@ -40,6 +40,9 @@
       }
       storeData = await res.json();
       console.log(storeData);
+      if (storeData.length > 0) {
+        selectedStore = storeData[0];
+      }
     } catch (e) {
       console.error(e);
       alert("無法取得搜尋結果");
