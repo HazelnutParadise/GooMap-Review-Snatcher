@@ -14,13 +14,28 @@
   let reviews = [];
 
   let isLoading = false;
+  let searchUUID = "";
+  let reviewUUID = "";
 
+  // 生成 UUID
+  const generateUUID = () => {
+    return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
+      /[xy]/g,
+      function (c) {
+        const r = (Math.random() * 16) | 0;
+        const v = c == "x" ? r : (r & 0x3) | 0x8;
+        return v.toString(16);
+      }
+    );
+  };
   const handleReset = () => {
     searchInputStr = "";
     selectedStore = "";
     pagesToFetch = 1;
     storeData = [];
     reviews = [];
+    searchUUID = "";
+    reviewUUID = "";
   };
 
   const handleSearch = async () => {
@@ -31,22 +46,56 @@
       isLoading = false;
       return;
     }
+
+    // 生成新的 UUID
+    searchUUID = generateUUID();
+
     try {
-      const res = await fetch(searchStoreUrl + `?storeName=${searchInputStr}`);
-      if (!res.ok) {
-        console.error("Error:", res.statusText);
-        alert("無法取得搜尋結果");
-        return;
-      }
-      storeData = await res.json();
-      console.log(storeData);
-      if (storeData.length > 0) {
-        selectedStore = storeData[0];
-      }
+      await pollForSearchResults();
     } catch (e) {
       console.error(e);
       alert("無法取得搜尋結果");
-    } finally {
+      isLoading = false;
+    }
+  };
+
+  const pollForSearchResults = async () => {
+    try {
+      const res = await fetch(
+        searchStoreUrl + `?storeName=${searchInputStr}&uuid=${searchUUID}`
+      );
+      if (!res.ok) {
+        console.error("Error:", res.statusText);
+        alert("無法取得搜尋結果");
+        isLoading = false;
+        return;
+      }
+
+      const data = await res.json();
+      console.log("Search response:", data);
+
+      // 如果收到空陣列，表示正在查詢中，需要輪詢
+      if (Array.isArray(data) && data.length === 0) {
+        setTimeout(pollForSearchResults, 1000); // 1秒後重新查詢
+        return;
+      }
+
+      // 如果收到資料，表示查詢完成
+      if (Array.isArray(data) && data.length > 0) {
+        storeData = data;
+        if (storeData.length > 0) {
+          selectedStore = storeData[0];
+        }
+        isLoading = false;
+        return;
+      }
+
+      // 如果收到 null 或其他錯誤，表示查詢失敗
+      alert("搜尋失敗");
+      isLoading = false;
+    } catch (e) {
+      console.error(e);
+      alert("無法取得搜尋結果");
       isLoading = false;
     }
   };
@@ -58,21 +107,54 @@
       isLoading = false;
       return;
     }
+
+    // 生成新的 UUID
+    reviewUUID = generateUUID();
+
+    try {
+      await pollForReviewResults();
+    } catch (e) {
+      console.error(e);
+      alert("無法取得評論");
+      isLoading = false;
+    }
+  };
+
+  const pollForReviewResults = async () => {
     try {
       const res = await fetch(
-        getReviewsUrl + `?storeID=${selectedStore.ID}&pages=${pagesToFetch}`
+        getReviewsUrl +
+          `?storeID=${selectedStore.ID}&pages=${pagesToFetch}&uuid=${reviewUUID}`
       );
       if (!res.ok) {
         console.error("Error:", res.statusText);
         alert("無法取得評論");
+        isLoading = false;
         return;
       }
-      reviews = await res.json();
-      console.log(reviews);
+
+      const data = await res.json();
+      console.log("Review response:", data);
+
+      // 如果收到 null，表示正在查詢中，需要輪詢
+      if (data === null) {
+        setTimeout(pollForReviewResults, 1000); // 1秒後重新查詢
+        return;
+      }
+
+      // 如果收到資料，表示查詢完成
+      if (data && typeof data === "object") {
+        reviews = data;
+        isLoading = false;
+        return;
+      }
+
+      // 其他情況表示查詢失敗
+      alert("取得評論失敗");
+      isLoading = false;
     } catch (e) {
       console.error(e);
       alert("無法取得評論");
-    } finally {
       isLoading = false;
     }
   };
