@@ -135,7 +135,7 @@ func fetchReviews() bool {
 			return true
 		}
 		reviews := fetcher.GetReviews(storeID, pages, datafetch.GoogleMapsStoreReviewsFetchingOptions{
-			MaxWaitingInterval_Milliseconds: 3000,
+			MaxWaitingInterval_Milliseconds: 1000,
 			SortBy:                          datafetch.SortByRelevance,
 		})
 		if reviews == nil {
