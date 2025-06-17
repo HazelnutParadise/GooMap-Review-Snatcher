@@ -127,7 +127,6 @@ func fetchReviews() bool {
 		uuid := data.UUID
 		storeID := data.StoreID
 		pages := data.Pages
-
 		// 執行取得評論的動作
 		fetcher := datafetch.GoogleMapsStores()
 		if fetcher == nil {
@@ -135,7 +134,7 @@ func fetchReviews() bool {
 			return true
 		}
 		reviews := fetcher.GetReviews(storeID, pages, datafetch.GoogleMapsStoreReviewsFetchingOptions{
-			MaxWaitingInterval_Milliseconds: 1000,
+			MaxWaitingInterval_Milliseconds: 1500,
 			SortBy:                          datafetch.SortByRelevance,
 		})
 		if reviews == nil {
