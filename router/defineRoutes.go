@@ -10,6 +10,7 @@ import (
 	"github.com/HazelnutParadise/Go-Utils/conv"
 	"github.com/HazelnutParadise/sveltigo"
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 )
 
 // 驗證來源域名的中間件
@@ -50,28 +51,38 @@ func defineRoutes(r *gin.Engine) {
 	api := r.Group("/api")
 	// 在所有 API 路由上應用域名驗證中間件
 	api.Use(validateOrigin())
+
 	api.GET("/search", func(ctx *gin.Context) {
 		storeName := ctx.Query("storeName")
-		searchUUID := ctx.Query("uuid")
-		if storeName == "" || searchUUID == "" {
-			ctx.JSON(400, gin.H{"error": "storeName and uuid are required"})
+		if storeName == "" {
+			ctx.JSON(400, gin.H{"error": "storeName is required"})
 			return
 		}
+		// 產生一個 UUID
+		searchUUID := uuid.New().String()
 		fmt.Println("searchUUID", searchUUID)
 		fmt.Println("storeName", storeName)
 		stores := app.SearchStores(searchUUID, storeName)
+		if stores == nil {
+			ctx.JSON(500, gin.H{"error": "Failed to fetch data"})
+			return
+		}
 		ctx.JSON(200, stores)
 	})
-
 	api.GET("/reviews", func(ctx *gin.Context) {
 		storeID := ctx.Query("storeID")
 		pages := ctx.Query("pages")
-		reviewUUID := ctx.Query("uuid")
-		if storeID == "" || pages == "" || reviewUUID == "" {
-			ctx.JSON(400, gin.H{"error": "storeID, pages and uuid are required"})
+		if storeID == "" || pages == "" {
+			ctx.JSON(400, gin.H{"error": "storeID and pages are required"})
 			return
 		}
+		// 產生一個 UUID
+		reviewUUID := uuid.New().String()
 		reviews := app.GetReviews(reviewUUID, storeID, conv.ParseInt(pages))
+		if reviews == nil {
+			ctx.JSON(500, gin.H{"error": "Failed to fetch data"})
+			return
+		}
 		ctx.JSON(200, reviews)
 	})
 
