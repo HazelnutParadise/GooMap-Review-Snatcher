@@ -5,12 +5,41 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strings"
 
 	"github.com/HazelnutParadise/Go-Utils/conv"
 	"github.com/HazelnutParadise/sveltigo"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 )
+
+// 驗證來源域名的中間件
+func validateOrigin() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		allowedOrigin := "https://gmaps-reviews.hazelnut-paradise.com"
+
+		// 檢查 Origin header
+		origin := ctx.GetHeader("Origin")
+		if origin != "" {
+			if origin == allowedOrigin {
+				ctx.Next()
+				return
+			}
+		} else {
+			// 如果沒有 Origin header，檢查 Referer header
+			referer := ctx.GetHeader("Referer")
+			if referer != "" && strings.HasPrefix(referer, allowedOrigin) {
+				ctx.Next()
+				return
+			} // 如果兩個 header 都沒有，拒絕請求
+			ctx.JSON(418, gin.H{"error": "ERR_B4C3D8"})
+			ctx.Abort()
+			return
+		} // 如果來源不符合，拒絕請求
+		ctx.JSON(418, gin.H{"error": "ERR_X7F9A2"})
+		ctx.Abort()
+	}
+}
 
 func defineRoutes(r *gin.Engine) {
 	r.GET("/", func(ctx *gin.Context) {
@@ -19,8 +48,10 @@ func defineRoutes(r *gin.Engine) {
 			"subtitle": "GooMap Review Snatcher",
 		})
 	})
-
 	api := r.Group("/api")
+	// 在所有 API 路由上應用域名驗證中間件
+	api.Use(validateOrigin())
+
 	api.GET("/search", func(ctx *gin.Context) {
 		storeName := ctx.Query("storeName")
 		if storeName == "" {
