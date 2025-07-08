@@ -9,22 +9,20 @@
       </div>
 
       <!-- 載入狀態 -->
-      <Loader v-if="appState.state.value.isLoading" />
+      <Loader v-if="isLoading" />
 
       <!-- 搜尋和選擇店家階段 -->
-      <SearchForm v-else-if="!appState.hasReviews.value" :state="appState.state.value" @search="handleSearch"
-        @fetch-reviews="handleFetchReviews" @update:search-input="appState.updateSearchInput"
-        @update:selected-store="appState.updateSelectedStore" @update:pages-to-fetch="appState.updatePagesToFetch" />
+      <SearchForm v-else-if="!hasReviews" :app-state="appState" @search="handleSearch"
+        @fetch-reviews="handleFetchReviews" />
 
       <!-- 顯示結果階段 -->
-      <ReviewResult v-else :state="appState.state.value" @download="handleDownload" @mine="handleMine"
-        @reset="handleReset" />
+      <ReviewResult v-else :app-state="appState" @download="handleDownload" @mine="handleMine" @reset="handleReset" />
     </div>
   </Layout>
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue'
+import { onMounted, computed } from 'vue'
 import Layout from './layouts/Layout.vue'
 import Loader from './components/Loader.vue'
 import SearchForm from './components/SearchForm.vue'
@@ -37,6 +35,10 @@ const subtitle: string = 'GooMap Review Snatcher'
 
 // 使用集中的狀態管理
 const appState = useGooMapReviewSnatcher()
+
+// 計算屬性 - 提升可讀性
+const isLoading = computed(() => appState.state.value.isLoading)
+const hasReviews = computed(() => appState.hasReviews.value)
 
 // 事件處理器
 const handleSearch = async () => {

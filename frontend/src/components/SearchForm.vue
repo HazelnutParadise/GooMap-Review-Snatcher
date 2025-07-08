@@ -29,51 +29,51 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import InfoCard from './InfoCard.vue'
-import type { AppState } from '../composables/useGooMapReviewSnatcher'
+import type { useGooMapReviewSnatcher } from '../composables/useGooMapReviewSnatcher'
 
 interface Props {
-    state: AppState
+    appState: ReturnType<typeof useGooMapReviewSnatcher>
 }
 
 const props = defineProps<Props>()
 
-const emit = defineEmits<{
+defineEmits<{
     'search': []
     'fetch-reviews': []
-    'update:search-input': [value: string]
-    'update:selected-store': [store: any]
-    'update:pages-to-fetch': [pages: number]
 }>()
+
+// 直接從 appState 獲取狀態
+const state = computed(() => props.appState.state.value)
 
 // 計算選中店家的索引
 const selectedStoreIndex = computed({
     get: () => {
-        if (!props.state.storeData || props.state.storeData.length === 0) return 0
-        if (!props.state.selectedStore) return 0
-        const index = props.state.storeData.findIndex(store =>
-            store && store.ID === props.state.selectedStore?.ID
+        if (!state.value.storeData || state.value.storeData.length === 0) return 0
+        if (!state.value.selectedStore) return 0
+        const index = state.value.storeData.findIndex(store =>
+            store && store.ID === state.value.selectedStore?.ID
         )
         return index >= 0 ? index : 0
     },
     set: (index: number) => {
-        if (index >= 0 && index < props.state.storeData.length) {
-            emit('update:selected-store', props.state.storeData[index])
+        if (index >= 0 && index < state.value.storeData.length) {
+            props.appState.updateSelectedStore(state.value.storeData[index])
         }
     }
 })
 
 // 搜尋輸入的雙向綁定
 const searchInput = computed({
-    get: () => props.state.searchInput,
-    set: (value: string) => emit('update:search-input', value)
+    get: () => state.value.searchInput,
+    set: (value: string) => props.appState.updateSearchInput(value)
 })
 
 // 頁數輸入的雙向綁定
 const pagesToFetch = computed({
-    get: () => props.state.pagesToFetch,
+    get: () => state.value.pagesToFetch,
     set: (value: string | number) => {
         const pages = typeof value === 'string' ? parseInt(value) || 0 : value
-        emit('update:pages-to-fetch', pages)
+        props.appState.updatePagesToFetch(pages)
     }
 })
 </script>

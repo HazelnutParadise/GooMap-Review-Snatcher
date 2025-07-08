@@ -42,15 +42,18 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import Redirecting from './Redirecting.vue'
-import type { AppState } from '../composables/useGooMapReviewSnatcher'
+import type { useGooMapReviewSnatcher } from '../composables/useGooMapReviewSnatcher'
 
 interface Props {
-    state: AppState
+    appState: ReturnType<typeof useGooMapReviewSnatcher>
 }
 
 const props = defineProps<Props>()
+
+// 從 appState 中獲取狀態
+const state = computed(() => props.appState.state.value)
 
 // 探勘狀態
 const goMining = ref(false)
@@ -58,8 +61,8 @@ const goMining = ref(false)
 // 處理探勘評論
 const handleMineReviews = async () => {
     goMining.value = true
-    const reviewContent = props.state.reviews.map((review) => review.content)
-    const reviewRating = props.state.reviews.map((review) => review.rating)
+    const reviewContent = state.value.reviews.map((review) => review.content)
+    const reviewRating = state.value.reviews.map((review) => review.rating)
     let dataUUID = ""
 
     try {
@@ -69,7 +72,7 @@ const handleMineReviews = async () => {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
-                storeName: props.state.selectedStore?.Name,
+                storeName: state.value.selectedStore?.Name,
                 reviews: reviewContent,
                 ratings: reviewRating,
             }),
