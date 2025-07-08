@@ -1,28 +1,3 @@
-<template>
-  <Layout>
-    <div class="container">
-      <img src="https://src.hazelnut-paradise.com/GooMapReviewSnatcher.png" alt="GooMapReviewSnatcher"
-        style="width: 100%; max-width: 150px;" />
-      <div class="title-box">
-        <h1 class="title">{{ title }}</h1>
-        <h2 class="subtitle">{{ subtitle }}</h2>
-      </div>
-
-      <!-- 載入狀態 -->
-      <Loader v-if="appState.state.value.isLoading" />
-
-      <!-- 搜尋和選擇店家階段 -->
-      <SearchForm v-else-if="!appState.hasReviews.value" :state="appState.state.value" @search="handleSearch"
-        @fetch-reviews="handleFetchReviews" @update:search-input="appState.updateSearchInput"
-        @update:selected-store="appState.updateSelectedStore" @update:pages-to-fetch="appState.updatePagesToFetch" />
-
-      <!-- 顯示結果階段 -->
-      <ReviewResult v-else :state="appState.state.value" @download="handleDownload" @mine="handleMine"
-        @reset="handleReset" />
-    </div>
-  </Layout>
-</template>
-
 <script setup lang="ts">
 import { onMounted } from 'vue'
 import Layout from './layouts/Layout.vue'
@@ -79,8 +54,32 @@ const handleReset = () => {
 onMounted(() => {
   document.title = `${title} - 榛果繽紛樂`
 })
-
 </script>
+
+<template>
+  <Layout>
+    <div class="container">
+      <img src="https://src.hazelnut-paradise.com/GooMapReviewSnatcher.png" alt="GooMapReviewSnatcher"
+        style="width: 100%; max-width: 150px;" />
+      <div class="title-box">
+        <h1 class="title">{{ title }}</h1>
+        <h2 class="subtitle">{{ subtitle }}</h2>
+      </div>
+
+      <!-- 載入狀態 -->
+      <Loader v-if="appState.state.value.isLoading" />
+
+      <!-- 搜尋和選擇店家階段 -->
+      <SearchForm v-else-if="!appState.hasReviews.value" :state="appState.state.value" @search="handleSearch"
+        @fetch-reviews="handleFetchReviews" @update:search-input="appState.updateSearchInput"
+        @update:selected-store="appState.updateSelectedStore" @update:pages-to-fetch="appState.updatePagesToFetch" />
+
+      <!-- 顯示結果階段 -->
+      <ReviewResult v-else :state="appState.state.value" @download="handleDownload" @mine="handleMine"
+        @reset="handleReset" />
+    </div>
+  </Layout>
+</template>
 
 <style scoped>
 .container {
