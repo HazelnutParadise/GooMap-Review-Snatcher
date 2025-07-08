@@ -7,7 +7,7 @@
             查詢其他商家
         </button>
         <div class="review-box">
-            <h3 class="store-name">{{ state.selectedStore?.Name }}</h3>
+            <h3 class="store-name">{{ appState.selectedStore.value?.Name }}</h3>
             <div class="button-group">
                 <button @click="$emit('download', 'csv')" class="download-button button">
                     下載 CSV
@@ -20,16 +20,17 @@
                 </button>
             </div>
             <div class="review-table-box">
-                <table class="review-table" v-if="state.reviews.length > 0">
+                <table class="review-table" v-if="appState.reviews.value.length > 0">
                     <thead>
                         <tr>
-                            <th v-for="key in Object.keys(state.reviews[0])" :key="key" :style="getColumnStyle(key)">
+                            <th v-for="key in Object.keys(appState.reviews.value[0])" :key="key"
+                                :style="getColumnStyle(key)">
                                 {{ key }}
                             </th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="(review, index) in state.reviews" :key="index">
+                        <tr v-for="(review, index) in appState.reviews.value" :key="index">
                             <td v-for="value in Object.values(review)" :key="value">
                                 {{ value }}
                             </td>
@@ -42,7 +43,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted } from 'vue'
 import Redirecting from './Redirecting.vue'
 import type { useGooMapReviewSnatcher } from '../composables/useGooMapReviewSnatcher'
 
@@ -52,52 +53,23 @@ interface Props {
 
 const props = defineProps<Props>()
 
-// 從 appState 中獲取狀態
-const state = computed(() => props.appState.state.value)
+defineEmits<{
+    'download': [type: 'csv' | 'json']
+    'mine': []
+    'reset': []
+}>()
 
 // 探勘狀態
 const goMining = ref(false)
 
-// 處理探勘評論
+// 處理探勘評論 - 使用 composable 中的方法
 const handleMineReviews = async () => {
     goMining.value = true
-    const reviewContent = state.value.reviews.map((review) => review.content)
-    const reviewRating = state.value.reviews.map((review) => review.rating)
-    let dataUUID = ""
-
     try {
-        const res = await fetch("/api/review-mining", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                storeName: state.value.selectedStore?.Name,
-                reviews: reviewContent,
-                ratings: reviewRating,
-            }),
-        })
-
-        if (res.ok) {
-            const data = await res.json()
-            dataUUID = data.dataUUID
-        } else {
-            console.error("Error:", res.statusText)
-            alert("無法使用 StoreCoach 探勘")
-            goMining.value = false
-            return
-        }
-
+        await props.appState.mineReviews(true)
+        // 如果不是 Safari 且開新頁，則重置狀態
         const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent)
-        const url = `https://storecoach.hazelnut-paradise.com/review-mining/${dataUUID}`
-
-        if (true && !isSafari) {
-            window.open(url, "_blank")
-        } else {
-            window.open(url, "_self")
-        }
-
-        if (true && !isSafari) {
+        if (!isSafari) {
             goMining.value = false
         }
     } catch (error) {

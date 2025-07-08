@@ -1,10 +1,11 @@
 <template>
     <!-- 已有店家資料時顯示選擇表單 -->
-    <form v-if="state.storeData.length > 0" class="input-form chose-store" @submit.prevent="$emit('fetch-reviews')">
+    <form v-if="appState.storeData.value.length > 0" class="input-form chose-store"
+        @submit.prevent="$emit('fetch-reviews')">
         <div class="store-select-box">
             <label for="store">選擇店家</label>
             <select v-model="selectedStoreIndex" class="store-select">
-                <option v-for="(store, index) in state.storeData" :key="store.ID" :value="index">
+                <option v-for="(store, index) in appState.storeData.value" :key="store.ID" :value="index">
                     {{ store.Name }}
                 </option>
             </select>
@@ -42,38 +43,35 @@ defineEmits<{
     'fetch-reviews': []
 }>()
 
-// 直接從 appState 獲取狀態
-const state = computed(() => props.appState.state.value)
-
 // 計算選中店家的索引
 const selectedStoreIndex = computed({
     get: () => {
-        if (!state.value.storeData || state.value.storeData.length === 0) return 0
-        if (!state.value.selectedStore) return 0
-        const index = state.value.storeData.findIndex(store =>
-            store && store.ID === state.value.selectedStore?.ID
+        if (!props.appState.storeData.value || props.appState.storeData.value.length === 0) return 0
+        if (!props.appState.selectedStore.value) return 0
+        const index = props.appState.storeData.value.findIndex(store =>
+            store && store.ID === props.appState.selectedStore.value?.ID
         )
         return index >= 0 ? index : 0
     },
     set: (index: number) => {
-        if (index >= 0 && index < state.value.storeData.length) {
-            props.appState.updateSelectedStore(state.value.storeData[index])
+        if (index >= 0 && index < props.appState.storeData.value.length) {
+            props.appState.selectedStore.value = props.appState.storeData.value[index]
         }
     }
 })
 
 // 搜尋輸入的雙向綁定
 const searchInput = computed({
-    get: () => state.value.searchInput,
-    set: (value: string) => props.appState.updateSearchInput(value)
+    get: () => props.appState.searchInput.value,
+    set: (value: string) => props.appState.searchInput.value = value
 })
 
 // 頁數輸入的雙向綁定
 const pagesToFetch = computed({
-    get: () => state.value.pagesToFetch,
+    get: () => props.appState.pagesToFetch.value,
     set: (value: string | number) => {
         const pages = typeof value === 'string' ? parseInt(value) || 0 : value
-        props.appState.updatePagesToFetch(pages)
+        props.appState.pagesToFetch.value = pages
     }
 })
 </script>

@@ -37,7 +37,7 @@ const subtitle: string = 'GooMap Review Snatcher'
 const appState = useGooMapReviewSnatcher()
 
 // 計算屬性 - 提升可讀性
-const isLoading = computed(() => appState.state.value.isLoading)
+const isLoading = computed(() => appState.isLoading.value)
 const hasReviews = computed(() => appState.hasReviews.value)
 
 // 事件處理器
