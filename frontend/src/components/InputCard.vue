@@ -1,3 +1,30 @@
+<template>
+    <form v-if="props.storeData && props.storeData.length > 0" ref="form" class="input-form chose-store"
+        @submit.prevent="props.handleGetReview">
+        <div class="store-select-box">
+            <label for="store">選擇店家</label>
+            <select v-model="selectedStoreIndex" class="store-select">
+                <option v-for="(store, index) in props.storeData" :key="store.ID" :value="index">
+                    {{ store.Name }}
+                </option>
+            </select>
+        </div>
+        <div class="pages-box">
+            <label for="pages">輸入頁數，0代表全部（一頁10筆）</label>
+            <input type="number" inputmode="numeric" min="0" name="pages" placeholder="輸入頁數" v-model="pagesToFetch" />
+        </div>
+        <button type="submit" class="button">確定</button>
+    </form>
+
+    <template v-else>
+        <InfoCard />
+        <form ref="form2" class="input-form" @submit.prevent="props.handleSearch">
+            <input type="text" placeholder="輸入關鍵字" v-model="searchInputStr" />
+            <button type="submit" class="button">搜尋</button>
+        </form>
+    </template>
+</template>
+
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import InfoCard from './InfoCard.vue'
@@ -34,52 +61,26 @@ const selectedStoreIndex = computed({
     },
     set: (index: number) => {
         if (index >= 0 && index < props.storeData.length) {
-            updateSelectedStore(props.storeData[index])
+            emit('update:selectedStore', props.storeData[index])
         }
     }
 })
 
-const updateSearchInputStr = (value: string) => {
-    emit('update:searchInputStr', value)
-}
+// 搜尋輸入的雙向綁定
+const searchInputStr = computed({
+    get: () => props.searchInputStr,
+    set: (value: string) => emit('update:searchInputStr', value)
+})
 
-const updateSelectedStore = (value: any) => {
-    emit('update:selectedStore', value)
-}
-
-const updatePagesToFetch = (value: number) => {
-    emit('update:pagesToFetch', value)
-}
+// 頁數輸入的雙向綁定
+const pagesToFetch = computed({
+    get: () => props.pagesToFetch,
+    set: (value: string | number) => {
+        const pages = typeof value === 'string' ? parseInt(value) || 0 : value
+        emit('update:pagesToFetch', pages)
+    }
+})
 </script>
-
-<template>
-    <form v-if="props.storeData && props.storeData.length > 0" ref="form" class="input-form chose-store"
-        @submit.prevent="props.handleGetReview">
-        <div class="store-select-box">
-            <label for="store">選擇店家</label>
-            <select v-model="selectedStoreIndex" class="store-select">
-                <option v-for="(store, index) in props.storeData" :key="store.ID" :value="index">
-                    {{ store.Name }}
-                </option>
-            </select>
-        </div>
-        <div class="pages-box">
-            <label for="pages">輸入頁數，0代表全部（一頁10筆）</label>
-            <input type="number" inputmode="numeric" min="0" name="pages" placeholder="輸入頁數" :value="props.pagesToFetch"
-                @input="updatePagesToFetch(parseInt(($event.target as HTMLInputElement).value))" />
-        </div>
-        <button type="submit" class="button">確定</button>
-    </form>
-
-    <template v-else>
-        <InfoCard />
-        <form ref="form2" class="input-form" @submit.prevent="props.handleSearch">
-            <input type="text" placeholder="輸入關鍵字" :value="props.searchInputStr"
-                @input="updateSearchInputStr(($event.target as HTMLInputElement).value)" />
-            <button type="submit" class="button">搜尋</button>
-        </form>
-    </template>
-</template>
 
 <style scoped>
 .input-form {

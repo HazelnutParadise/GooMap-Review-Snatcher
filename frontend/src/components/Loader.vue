@@ -1,3 +1,10 @@
+<template>
+    <div class="loader-container">
+        <p>{{ loadingWord }}</p>
+        <div class="loader"></div>
+    </div>
+</template>
+
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
 
@@ -20,13 +27,6 @@ onUnmounted(() => {
 })
 </script>
 
-<template>
-    <div class="loader-container">
-        <p>{{ loadingWord }}</p>
-        <div class="loader"></div>
-    </div>
-</template>
-
 <style scoped>
 .loader-container {
     display: flex;
@@ -43,6 +43,10 @@ onUnmounted(() => {
     border-top: 5px solid #3498db;
     border-radius: 50%;
     animation: spin 1s linear infinite;
+}
+
+p {
+    color: #333;
 }
 
 @keyframes spin {

@@ -11,8 +11,7 @@
         </div>
         <div class="pages-box">
             <label for="pages">輸入頁數，0代表全部（一頁10筆）</label>
-            <input type="number" inputmode="numeric" min="0" name="pages" placeholder="輸入頁數" :value="state.pagesToFetch"
-                @input="handlePagesInput" />
+            <input type="number" inputmode="numeric" min="0" name="pages" placeholder="輸入頁數" v-model="pagesToFetch" />
         </div>
         <button type="submit" class="button">確定</button>
     </form>
@@ -21,7 +20,7 @@
     <template v-else>
         <InfoCard />
         <form class="input-form" @submit.prevent="$emit('search')">
-            <input type="text" placeholder="輸入關鍵字" :value="state.searchInput" @input="handleSearchInput" />
+            <input type="text" placeholder="輸入關鍵字" v-model="searchInput" />
             <button type="submit" class="button">搜尋</button>
         </form>
     </template>
@@ -63,18 +62,20 @@ const selectedStoreIndex = computed({
     }
 })
 
-// 處理搜尋輸入
-const handleSearchInput = (event: Event) => {
-    const target = event.target as HTMLInputElement
-    emit('update:search-input', target.value)
-}
+// 搜尋輸入的雙向綁定
+const searchInput = computed({
+    get: () => props.state.searchInput,
+    set: (value: string) => emit('update:search-input', value)
+})
 
-// 處理頁數輸入
-const handlePagesInput = (event: Event) => {
-    const target = event.target as HTMLInputElement
-    const pages = parseInt(target.value) || 0
-    emit('update:pages-to-fetch', pages)
-}
+// 頁數輸入的雙向綁定
+const pagesToFetch = computed({
+    get: () => props.state.pagesToFetch,
+    set: (value: string | number) => {
+        const pages = typeof value === 'string' ? parseInt(value) || 0 : value
+        emit('update:pages-to-fetch', pages)
+    }
+})
 </script>
 
 <style scoped>
