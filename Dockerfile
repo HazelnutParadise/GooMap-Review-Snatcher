@@ -25,7 +25,7 @@ RUN CGO_ENABLED=0 go build -o /app/bin/main .
 FROM alpine:latest
 
 WORKDIR /app
-COPY --from=builder /app/bin/main /main
-COPY --from=frontend-builder /app/frontend/dist /frontend/dist
+COPY --from=builder /app/bin/main ./main
+COPY --from=frontend-builder /app/frontend/dist ./frontend/dist
 
-CMD ["/main"]
+CMD ["./main"]
