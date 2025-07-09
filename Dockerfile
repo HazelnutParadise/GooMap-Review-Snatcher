@@ -1,3 +1,13 @@
+FROM oven/bun:latest AS frontend-builder
+
+WORKDIR /app
+
+COPY  frontend/ ./frontend/
+
+RUN cd frontend && \
+    bun install && \
+    bun run build
+
 FROM golang:1.23 AS builder
 
 WORKDIR /app
@@ -15,5 +25,6 @@ RUN CGO_ENABLED=0 go build -o /app/bin/main .
 FROM alpine:latest
 
 COPY --from=builder /app/bin/main /main
+COPY --from=frontend-builder /app/frontend/dist /app/frontend/dist
 
 CMD ["/main"]
