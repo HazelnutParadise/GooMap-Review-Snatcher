@@ -1,6 +1,5 @@
 services:
   web:
     image: gmrs
-    ports:
-      - "127.0.0.1:5432:8000"
+    network_mode: host
     restart: unless-stopped
