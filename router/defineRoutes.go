@@ -72,17 +72,46 @@ func defineRoutes(r *gin.Engine) {
 	api.GET("/reviews", func(ctx *gin.Context) {
 		storeID := ctx.Query("storeID")
 		pages := ctx.Query("pages")
+		uuidParam := ctx.Query("uuid")
+
 		if storeID == "" || pages == "" {
 			ctx.JSON(400, gin.H{"error": "storeID and pages are required"})
 			return
 		}
-		// 產生一個 UUID
-		reviewUUID := uuid.New().String()
-		reviews := app.GetReviews(reviewUUID, storeID, conv.ParseInt(pages))
-		if reviews == nil {
-			ctx.JSON(500, gin.H{"error": "Failed to fetch data"})
+
+		// 如果沒有提供 UUID，表示第一次請求，啟動任務
+		if uuidParam == "" {
+			reviewUUID := uuid.New().String()
+			app.StartGetReviews(reviewUUID, storeID, conv.ParseInt(pages))
+			// 回傳 202 Accepted 表示任務已啟動但尚未完成
+			ctx.JSON(202, gin.H{
+				"uuid":    reviewUUID,
+				"status":  "processing",
+				"message": "Review fetching started",
+			})
 			return
 		}
+
+		// 如果有 UUID，檢查結果
+		reviews, isCompleted, hasError := app.CheckReviewsResult(uuidParam)
+
+		if !isCompleted {
+			// 還在處理中，回傳 202
+			ctx.JSON(202, gin.H{
+				"uuid":    uuidParam,
+				"status":  "processing",
+				"message": "Still fetching reviews",
+			})
+			return
+		}
+
+		if hasError {
+			// 處理失敗，回傳 500
+			ctx.JSON(500, gin.H{"error": "Failed to fetch reviews"})
+			return
+		}
+
+		// 成功完成，回傳 200 和結果
 		ctx.JSON(200, reviews)
 	})
 

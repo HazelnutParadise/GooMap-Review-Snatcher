@@ -46,20 +46,20 @@ class ApiService {
                     throw new Error(`HTTP error! status: ${res.status}`)
                 }
 
-                const data = await res.json()
-
-                // 如果收到空陣列，表示正在查詢中，需要輪詢
-                if (Array.isArray(data) && data.length === 0) {
-                    await new Promise(resolve => setTimeout(resolve, 1000))
+                // 如果狀態碼是 202，表示還在處理中，繼續輪詢
+                if (res.status === 202) {
+                    await new Promise(resolve => setTimeout(resolve, 10000)) // 增加到10秒間隔
                     return pollForResults()
                 }
 
-                // 如果收到資料，表示查詢完成
-                if (Array.isArray(data) && data.length > 0) {
+                const data = await res.json()
+
+                // 如果狀態碼是 200，表示完成，回傳結果
+                if (res.status === 200) {
                     return data
                 }
 
-                // 如果收到 null 或其他錯誤，表示查詢失敗
+                // 其他狀態碼表示錯誤
                 throw new Error('搜尋失敗')
             } catch (error) {
                 console.error('Search error:', error)
@@ -72,39 +72,59 @@ class ApiService {
 
     // 取得評論
     async getReviews(storeID: string, pages: number): Promise<Review[]> {
-        const uuid = this.generateUUID()
+        // 第一次請求：啟動任務
+        const startRes = await fetch(
+            `${this.getReviewsUrl}?storeID=${storeID}&pages=${pages}`
+        )
 
-        const pollForResults = async (): Promise<Review[]> => {
-            try {
-                const res = await fetch(
-                    `${this.getReviewsUrl}?storeID=${storeID}&pages=${pages}&uuid=${uuid}`
-                )
-
-                if (!res.ok) {
-                    throw new Error(`HTTP error! status: ${res.status}`)
-                }
-
-                const data = await res.json()
-
-                // 如果收到 null，表示正在查詢中，需要輪詢
-                if (data === null) {
-                    await new Promise(resolve => setTimeout(resolve, 1000))
-                    return pollForResults()
-                }
-
-                // 如果收到資料，表示查詢完成
-                if (data && typeof data === "object") {
-                    return data
-                }
-
-                throw new Error('取得評論失敗')
-            } catch (error) {
-                console.error('Reviews error:', error)
-                throw error
-            }
+        if (!startRes.ok) {
+            throw new Error(`HTTP error! status: ${startRes.status}`)
         }
 
-        return pollForResults()
+        const startData = await startRes.json()
+
+        // 如果立即得到結果（狀態碼 200），直接回傳
+        if (startRes.status === 200) {
+            return startData
+        }
+
+        // 如果狀態碼是 202，表示任務已啟動，需要輪詢
+        if (startRes.status === 202 && startData.uuid) {
+            const uuid = startData.uuid
+
+            const pollForResults = async (): Promise<Review[]> => {
+                try {
+                    const res = await fetch(
+                        `${this.getReviewsUrl}?storeID=${storeID}&pages=${pages}&uuid=${uuid}`
+                    )
+
+                    // 如果狀態碼是 202，表示還在處理中，繼續輪詢
+                    if (res.status === 202) {
+                        await new Promise(resolve => setTimeout(resolve, 2000)) // 增加到2秒間隔
+                        return pollForResults()
+                    }
+
+                    if (!res.ok) {
+                        throw new Error(`HTTP error! status: ${res.status}`)
+                    }
+
+                    // 如果狀態碼是 200，表示完成，回傳結果
+                    if (res.status === 200) {
+                        const data = await res.json()
+                        return data
+                    }
+
+                    throw new Error('取得評論失敗')
+                } catch (error) {
+                    console.error('Reviews polling error:', error)
+                    throw error
+                }
+            }
+
+            return pollForResults()
+        }
+
+        throw new Error('取得評論失敗')
     }
 
     // 評論探勘

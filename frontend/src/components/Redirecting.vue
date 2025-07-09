@@ -14,4 +14,15 @@ import Loader from './Loader.vue'
 
 <style scoped>
 /* No additional styles needed */
+
+h1 {
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 0.5rem;
+}
+
+p {
+    font-size: 1.2rem;
+    color: #666;
+}
 </style>

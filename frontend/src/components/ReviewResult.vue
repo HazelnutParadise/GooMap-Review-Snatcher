@@ -15,7 +15,7 @@
                 <button @click="$emit('download', 'json')" class="download-button button">
                     下載 JSON
                 </button>
-                <button @click="handleMineReviews" class="mining-button button">
+                <button @click="handleMineReviews(true)" class="mining-button button">
                     使用 <strong>StoreCoach</strong> 探勘
                 </button>
             </div>
@@ -43,7 +43,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import Redirecting from './Redirecting.vue'
 import type { useGooMapReviewSnatcher } from '../composables/useGooMapReviewSnatcher'
 
@@ -62,15 +62,40 @@ defineEmits<{
 // 探勘狀態
 const goMining = ref(false)
 
+// 儲存事件監聽器的引用，用於清理
+let focusHandler: (() => void) | null = null
+let timeoutId: number | null = null
+
 // 處理探勘評論 - 使用 composable 中的方法
-const handleMineReviews = async () => {
+const handleMineReviews = async (openNewPage: boolean) => {
     goMining.value = true
     try {
-        await props.appState.mineReviews(true)
-        // 如果不是 Safari 且開新頁，則重置狀態
-        const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent)
-        if (!isSafari) {
-            goMining.value = false
+        await props.appState.mineReviews(openNewPage)
+
+        if (openNewPage) {
+            // 如果開新頁，監聽窗口焦點變化來檢測重定向完成
+            focusHandler = () => {
+                // 延遲一小段時間再關閉，確保重定向已完成
+                setTimeout(() => {
+                    goMining.value = false
+                }, 500)
+                if (focusHandler) {
+                    window.removeEventListener('focus', focusHandler)
+                    focusHandler = null
+                }
+            }
+
+            // 監聽窗口重新獲得焦點
+            window.addEventListener('focus', focusHandler)
+
+            // 備案：3秒後自動關閉 redirecting 畫面
+            timeoutId = window.setTimeout(() => {
+                goMining.value = false
+                if (focusHandler) {
+                    window.removeEventListener('focus', focusHandler)
+                    focusHandler = null
+                }
+            }, 3000)
         }
     } catch (error) {
         console.error("Mining error:", error)
@@ -96,7 +121,19 @@ onMounted(async () => {
     console.log(queryParams)
 
     if (queryParams.mode && queryParams.mode === "storecoach") {
-        await handleMineReviews()
+        await handleMineReviews(false)
+    }
+})
+
+// 組件卸載時清理事件監聽器
+onUnmounted(() => {
+    if (focusHandler) {
+        window.removeEventListener('focus', focusHandler)
+        focusHandler = null
+    }
+    if (timeoutId) {
+        window.clearTimeout(timeoutId)
+        timeoutId = null
     }
 })
 </script>
