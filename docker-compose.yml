@@ -2,5 +2,5 @@ services:
   web:
     image: gmrs
     ports:
-      - "5432:8000"
+      - "127.0.0.1:5432:8000"
     restart: unless-stopped
