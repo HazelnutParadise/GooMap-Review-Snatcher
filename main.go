@@ -14,6 +14,6 @@ func main() {
 	r := router.GinRouter()
 	go app.KeepFetching()
 
-	fmt.Println("Serving on :8000")
-	http.ListenAndServe(":8000", r)
+	fmt.Println("Serving on 127.0.0.1:5432")
+	http.ListenAndServe("127.0.0.1:5432", r)
 }
