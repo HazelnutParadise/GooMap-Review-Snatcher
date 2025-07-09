@@ -8,7 +8,7 @@ RUN cd frontend && \
     bun install && \
     bun run build
 
-FROM golang:1.23 AS builder
+FROM golang:1.23-alpine AS builder
 
 WORKDIR /app
 
