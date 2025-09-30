@@ -127,51 +127,62 @@ func worker(workerID int) {
 }
 
 func fetchStores() bool {
-	if toSearchBuf.Len() > 0 {
-		// 從 map 中移除該項目
-		searchingData := toSearchBuf.Pop().(searchingDataStruct)
-		uuid := searchingData.UUID
-		storeName := searchingData.StoreName
+	data := toSearchBuf.Pop()
+	if data == nil {
+		return false
+	}
 
-		// 執行搜尋商店的動作
-		fetcher := datafetch.GoogleMapsStores()
-		if fetcher == nil {
-			failedBuf.Store(uuid, nil)
-			return true
-		}
-		searched := fetcher.Search(storeName)
-		if searched == nil {
-			failedBuf.Store(uuid, nil)
-			return true
-		}
-		searchedBuf.Store(uuid, searched)
+	searchingData, ok := data.(searchingDataStruct)
+	if !ok {
+		return false
+	}
+
+	uuid := searchingData.UUID
+	storeName := searchingData.StoreName
+
+	// 執行搜尋商店的動作
+	fetcher := datafetch.GoogleMapsStores()
+	if fetcher == nil {
+		failedBuf.Store(uuid, nil)
 		return true
 	}
-	return false
+	searched := fetcher.Search(storeName)
+	if searched == nil {
+		failedBuf.Store(uuid, nil)
+		return true
+	}
+	searchedBuf.Store(uuid, searched)
+	return true
 }
 
 func fetchReviews() bool {
-	if toGetReviewsBuf.Len() > 0 {
-		data := toGetReviewsBuf.Pop().(gettingReviewsDataStruct)
-		uuid := data.UUID
-		storeID := data.StoreID
-		pages := data.Pages
-		// 執行取得評論的動作
-		fetcher := datafetch.GoogleMapsStores()
-		if fetcher == nil {
-			failedBuf.Store(uuid, nil)
-			return true
-		}
-		reviews := fetcher.GetReviews(storeID, pages, datafetch.GoogleMapsStoreReviewsFetchingOptions{
-			MaxWaitingInterval_Milliseconds: 1500,
-			SortBy:                          datafetch.SortByRelevance,
-		})
-		if reviews == nil {
-			failedBuf.Store(uuid, nil)
-			return true
-		}
-		gotReviewsBuf.Store(uuid, reviews)
+	data := toGetReviewsBuf.Pop()
+	if data == nil {
+		return false
+	}
+
+	gettingReviewsData, ok := data.(gettingReviewsDataStruct)
+	if !ok {
+		return false
+	}
+
+	uuid := gettingReviewsData.UUID
+	storeID := gettingReviewsData.StoreID
+	pages := gettingReviewsData.Pages
+	// 執行取得評論的動作
+	fetcher := datafetch.GoogleMapsStores()
+	if fetcher == nil {
+		failedBuf.Store(uuid, nil)
 		return true
 	}
-	return false
+	reviews := fetcher.GetReviews(storeID, pages, datafetch.GoogleMapsStoreReviewsFetchingOptions{
+		MaxWaitingInterval_Milliseconds: 1500,
+		SortBy:                          datafetch.SortByRelevance,
+	})
+	if reviews == nil {
+		failedBuf.Store(uuid, nil)
+		return true
+	}
+	gotReviewsBuf.Store(uuid, reviews)
+	return true
 }
