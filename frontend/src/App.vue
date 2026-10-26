@@ -1,12 +1,14 @@
 <template>
   <Layout>
-    <div class="container">
+    <div class="container" :class="{ 'has-results': hasReviews && !isLoading }">
+      <header class="brand-heading">
       <img src="https://src.hazelnut-paradise.com/GooMapReviewSnatcher.png" alt="GooMapReviewSnatcher"
         style="width: 100%; max-width: 150px;" />
       <div class="title-box">
         <h1 class="title">{{ title }}</h1>
         <h2 class="subtitle">{{ subtitle }}</h2>
       </div>
+      </header>
 
       <!-- 載入狀態 -->
       <Loader v-if="isLoading" />
@@ -85,52 +87,95 @@ onMounted(() => {
 
 <style scoped>
 .container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-  padding-top: 20px;
-  padding-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+.brand-heading {
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+}
+
+.has-results {
+    justify-content:flex-start;
+    min-height:calc(100vh - 110px);
+}
+
+.has-results .brand-heading {
+    flex-direction:row;
+    align-items:center;
+    gap:12px;
+    width:100%;
+    max-width:1152px;
+    padding:0 16px;
+}
+
+.has-results .brand-heading img {
+    width:48px !important;
+}
+
+.has-results .title-box {
+    margin:0;
+}
+
+.has-results .title {
+    font-size:18px;
+    text-shadow:none;
+}
+
+.has-results .subtitle {
+    font-size:11px;
+    color:#59687a;
+}
+
+.has-results .title-box:hover {
+    transform:none;
 }
 
 .title-box {
-  display: flex;
-  flex-direction: column;
-  align-items: start;
-  justify-content: center;
-  margin-bottom: 1rem;
-  transition: transform 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    justify-content: center;
+    margin-bottom: 1rem;
+    transition: transform 0.3s ease;
 }
 
 .title {
-  font-size: 2.5rem;
-  color: #2c3e50;
-  margin: 0;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+    font-size: 2.5rem;
+    color: #2c3e50;
+    margin: 0;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .title-box:hover {
-  transform: scale(1.05);
+    transform: scale(1.05);
 }
 
 .subtitle {
-  font-size: 1.5rem;
-  color: #0a0903;
-  margin: 0;
+    font-size: 1.5rem;
+    color: #0a0903;
+    margin: 0;
 }
 
 @keyframes pop {
-  0% {
-    transform: scale(1);
-  }
+    0% {
+        transform: scale(1);
+    }
 
-  50% {
-    transform: scale(1.1);
-  }
+    50% {
+        transform: scale(1.1);
+    }
 
-  100% {
-    transform: scale(1);
-  }
+    100% {
+        transform: scale(1);
+    }
+
 }
 </style>
