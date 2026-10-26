@@ -1,14 +1,14 @@
-FROM oven/bun:latest AS frontend-builder
+FROM oven/bun:1.4.4 AS frontend-builder
 
 WORKDIR /app
 
 COPY  frontend/ ./frontend/
 
 RUN cd frontend && \
-    bun install && \
+    bun install --frozen-lockfile && \
     bun run build
 
-FROM golang:1.24-alpine AS builder
+FROM golang:1.27.3-alpine AS builder
 
 WORKDIR /app
 

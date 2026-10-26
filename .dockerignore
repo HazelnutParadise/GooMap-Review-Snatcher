@@ -1,0 +1,35 @@
+# Repository and editor files
+.git
+**/.vscode
+**/.idea
+**/.DS_Store
+**/Thumbs.db
+
+# Dependencies, generated files and caches
+**/node_modules
+**/dist
+**/dist-ssr
+**/.cache
+**/*.tsbuildinfo
+bin
+GooMap-Review-Snatcher
+GooMap-Review-Snatcher.exe
+main
+main.exe
+**/*.test
+
+# Logs and test output
+**/logs
+**/*.log
+**/coverage
+**/coverage.out
+**/coverage.html
+**/*.lcov
+**/*.pid
+**/*.pid.lock
+
+# Local environment files
+**/.env
+**/.env.*
+!**/.env.example
+!**/.env.*.example
