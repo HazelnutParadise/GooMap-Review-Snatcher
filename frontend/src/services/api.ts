@@ -2,17 +2,21 @@
 export interface Store {
     ID: string
     Name: string
-    Address?: string
-    Rating?: number
-    [key: string]: any
 }
 
 export interface Review {
+    reviewer: string
+    reviewer_id: string
+    reviewer_state: string
+    reviewer_level: number
+    reviewer_review_count: number
+    reviewer_photo_count: number
+    review_id: string
+    review_time: string
+    review_date: string
+    language: string
     content: string
     rating: number
-    author?: string
-    date?: string
-    [key: string]: any
 }
 
 class ApiService {

@@ -126,8 +126,19 @@ func worker(workerID int) {
 	}
 }
 
+// 在同一個鎖內檢查並取出工作，避免空佇列警告與多個 worker 同時取走最後一筆。
+func popQueued(queue *insyra.DataList) any {
+	var job any
+	queue.AtomicDo(func(queue *insyra.DataList) {
+		if queue.Len() > 0 {
+			job = queue.Pop()
+		}
+	})
+	return job
+}
+
 func fetchStores() bool {
-	data := toSearchBuf.Pop()
+	data := popQueued(toSearchBuf)
 	if data == nil {
 		return false
 	}
@@ -142,10 +153,6 @@ func fetchStores() bool {
 
 	// 執行搜尋商店的動作
 	fetcher := datafetch.GoogleMapsStores()
-	if fetcher == nil {
-		failedBuf.Store(uuid, nil)
-		return true
-	}
 	searched := fetcher.Search(storeName)
 	if searched == nil {
 		failedBuf.Store(uuid, nil)
@@ -156,7 +163,7 @@ func fetchStores() bool {
 }
 
 func fetchReviews() bool {
-	data := toGetReviewsBuf.Pop()
+	data := popQueued(toGetReviewsBuf)
 	if data == nil {
 		return false
 	}
@@ -171,13 +178,9 @@ func fetchReviews() bool {
 	pages := gettingReviewsData.Pages
 	// 執行取得評論的動作
 	fetcher := datafetch.GoogleMapsStores()
-	if fetcher == nil {
-		failedBuf.Store(uuid, nil)
-		return true
-	}
 	reviews := fetcher.GetReviews(storeID, pages, datafetch.GoogleMapsStoreReviewsFetchingOptions{
-		MaxWaitingInterval_Milliseconds: 1500,
-		SortBy:                          datafetch.SortByRelevance,
+		MaxWaitingInterval: 1500 * time.Millisecond,
+		SortBy:             datafetch.GoogleMapsStoreReviewSortByRelevance,
 	})
 	if reviews == nil {
 		failedBuf.Store(uuid, nil)
