@@ -12,6 +12,7 @@ bun run dev
 型別檢查、正式建置與本機預覽：
 
 ```sh
+bun test
 bun run typecheck
 bun run build
 bun run preview
